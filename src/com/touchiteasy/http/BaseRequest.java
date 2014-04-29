@@ -1,13 +1,13 @@
-package http;
+package com.touchiteasy.http;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Request {
-    public final String resource;
-    public final Map<String, String> parameters;
+public class BaseRequest implements Request {
+    private final String resource;
+    private final Map<String, String> parameters;
 
-    public Request(String resource, Map<String, String> parameters) {
+    public BaseRequest(String resource, Map<String, String> parameters) {
         checkField(resource, "resource");
         checkField(parameters, "parameters");
 
@@ -15,11 +15,11 @@ public class Request {
         this.parameters = parameters;
     }
 
-    public Request(String resource) {
+    public BaseRequest(String resource) {
         this(resource, new HashMap<String, String>());
     }
 
-    public Request(String resource, String ... keyValuePairs) {
+    public BaseRequest(String resource, String... keyValuePairs) {
         this(resource, generateMap(keyValuePairs));
     }
 
@@ -40,5 +40,15 @@ public class Request {
         }
 
         return params;
+    }
+
+    @Override
+    public String getResource() {
+        return this.resource;
+    }
+
+    @Override
+    public Map<String, String> getParameters() {
+        return this.parameters;
     }
 }

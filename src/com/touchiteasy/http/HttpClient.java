@@ -1,4 +1,4 @@
-package http;
+package com.touchiteasy.http;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -49,7 +49,7 @@ class HttpClient {
         try{
             HttpResponse response = createHttpClient(this.timeout).execute(request);
 
-            return new Response(
+            return new BaseResponse(
                     response.getStatusLine().getStatusCode(),
                     getString(response.getEntity().getContent())
             );

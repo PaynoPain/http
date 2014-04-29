@@ -1,4 +1,4 @@
-package http;
+package com.touchiteasy.http;
 
 public class PostMethod extends HttpClient implements ResourceRequester {
     public PostMethod(int millisecondsToTimeout) {
@@ -7,6 +7,6 @@ public class PostMethod extends HttpClient implements ResourceRequester {
 
     @Override
     public Response run(Request request) {
-        return post(request.resource, request.parameters);
+        return post(request.getResource(), request.getParameters());
     }
 }
