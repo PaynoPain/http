@@ -1,4 +1,6 @@
-import http.Response;
+package com.touchiteasy.oauth;
+
+import com.touchiteasy.http.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,12 +22,12 @@ public class TokensParser {
     }
 
     private Tokens parse(Response response) throws JSONException {
-        JSONObject json = new JSONObject(response.body);
+        JSONObject json = new JSONObject(response.getBody());
         return new Tokens(json.getString("access_token"), json.getString("refresh_token"));
     }
 
     private void throwIfCodeIsNotSuccess(Response response) throws InvalidTokensResponse {
-        if(response.statusCode != SUCCESS){
+        if(response.getStatusCode() != SUCCESS){
             throw new InvalidTokensResponse("The response code is not 200!");
         }
     }

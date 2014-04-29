@@ -1,3 +1,5 @@
+package com.touchiteasy.oauth;
+
 public class InvalidTokensResponse extends Exception {
     InvalidTokensResponse(String message) {
         super(message);
