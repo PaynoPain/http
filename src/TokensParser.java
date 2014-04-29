@@ -6,6 +6,10 @@ public class TokensParser {
     private static final int SUCCESS = 200;
 
     public Tokens constructFrom(Response response) throws InvalidTokensResponse {
+        if (response == null){
+            throw new InvalidTokensResponse("Null response!");
+        }
+
         throwIfCodeIsNotSuccess(response);
 
         try {

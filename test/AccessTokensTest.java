@@ -34,7 +34,7 @@ public class AccessTokensTest {
                 assertThat(tokensParser.constructFrom(mock).access, is(tokensToAssert.access));
             }
             @Test
-            public void ShouldReturnRefeshToken() throws InvalidTokensResponse {
+            public void ShouldReturnRefreshToken() throws InvalidTokensResponse {
                 assertThat(tokensParser.constructFrom(mock).refresh, is(tokensToAssert.refresh));
             }
         }
@@ -47,7 +47,7 @@ public class AccessTokensTest {
             }
 
             @Test(expected = InvalidTokensResponse.class)
-            public void ShouldReturnBadRequesExeption() throws InvalidTokensResponse{
+            public void ShouldReturnBadRequestException() throws InvalidTokensResponse{
                 tokensParser.constructFrom(mock);
             }
         }
