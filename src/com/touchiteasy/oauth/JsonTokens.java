@@ -4,26 +4,25 @@ import com.touchiteasy.http.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TokensParser {
+public class JsonTokens implements Tokens {
     private static final int SUCCESS = 200;
 
-    public Tokens constructFrom(Response response) throws InvalidTokensResponse {
+    private final String access, refresh;
+
+    public JsonTokens(Response response) {
         if (response == null){
-            throw new InvalidTokensResponse("Null response!");
+            throw new NullPointerException("Null response!");
         }
 
         throwIfCodeIsNotSuccess(response);
 
         try {
-            return parse(response);
+            JSONObject json = new JSONObject(response.getBody());
+            access = json.getString("access_token");
+            refresh = json.getString("refresh_token");
         } catch (JSONException e){
             throw new InvalidTokensResponse(e);
         }
-    }
-
-    private Tokens parse(Response response) throws JSONException {
-        JSONObject json = new JSONObject(response.getBody());
-        return new Tokens(json.getString("access_token"), json.getString("refresh_token"));
     }
 
     private void throwIfCodeIsNotSuccess(Response response) throws InvalidTokensResponse {
@@ -32,4 +31,13 @@ public class TokensParser {
         }
     }
 
+    @Override
+    public String getAccess() {
+        return access;
+    }
+
+    @Override
+    public String getRefresh() {
+        return refresh;
+    }
 }

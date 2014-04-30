@@ -7,7 +7,7 @@ public class RefreshTokensRequest extends BaseRequest{
         super(
                 resource,
                 "grant_type", "refresh_token",
-                "refresh_token", tokens.refresh
+                "refresh_token", tokens.getRefresh()
         );
     }
 }
