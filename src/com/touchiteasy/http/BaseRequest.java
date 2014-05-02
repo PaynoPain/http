@@ -21,10 +21,6 @@ public class BaseRequest implements Request {
         this(resource, new HashMap<String, String>());
     }
 
-    public BaseRequest(String resource, String... keyValuePairs) {
-        this(resource, new LiteralStringsMap(keyValuePairs));
-    }
-
     private static void checkField(Object obj, String fieldName) {
         if (obj == null){
             throw new IllegalArgumentException("The " + fieldName + " argument is required!");
