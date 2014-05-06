@@ -1,5 +1,6 @@
 package com.touchiteasy.oauth;
 
+import com.touchiteasy.http.BaseResponse;
 import com.touchiteasy.http.Request;
 import com.touchiteasy.http.ResourceRequester;
 import com.touchiteasy.http.Response;
@@ -19,6 +20,13 @@ public class Interactor implements ResourceRequester{
 
     @Override
     public Response run(Request request) {
+        if (tokens.isEmpty()){
+            tokens.set(new JsonTokens(getResponse(request)));
+        }
+        return new BaseResponse(200, "");
+    }
+
+    private Response getResponse(Request request) {
         Request req = new ClientContext(
                 client,
                 new LoginRequest(
