@@ -1,9 +1,7 @@
 package com.touchiteasy.oauth;
 
-import com.touchiteasy.http.BaseResponse;
-import com.touchiteasy.http.Request;
-import com.touchiteasy.http.ResourceRequester;
-import com.touchiteasy.http.Response;
+import com.touchiteasy.http.*;
+import java.io.IOException;
 
 public class Interactor implements ResourceRequester{
     private final ResourceRequester requester;
@@ -19,18 +17,44 @@ public class Interactor implements ResourceRequester{
     }
 
     @Override
-    public Response run(Request request) {
-        if (tokens.isEmpty()){
-            tokens.set(new JsonTokens(getResponse(request)));
+    public Response run(Request request) throws IOException {
+        if (tokens.isEmpty()) {
+            tokens.set(new JsonTokens(getLoginResponse(request)));
         }
-        return new BaseResponse(200, "");
+        Response finalResponse = runRequest(request);
+
+        if(finalResponse.getStatusCode()==401){
+            tokens.set(new JsonTokens(getRefreshResponse(request)));
+            finalResponse = runRequest(request);
+        }
+        if(finalResponse.getStatusCode()==400){
+            throw new IOException();
+        }
+
+        return finalResponse;
     }
 
-    private Response getResponse(Request request) {
+    private Response runRequest(Request request) throws IOException {
+        Request req = new ResourceRequest(tokens.get(), request);
+        return requester.run(req);
+    }
+
+    private Response getLoginResponse(Request request) throws IOException {
         Request req = new ClientContext(
                 client,
                 new LoginRequest(
                         user,
+                        request
+                )
+        );
+
+        return requester.run(req);
+    }
+    private Response getRefreshResponse(Request request) throws IOException {
+        Request req = new ClientContext(
+                client,
+                new RefreshTokensRequest(
+                        tokens.get(),
                         request
                 )
         );
