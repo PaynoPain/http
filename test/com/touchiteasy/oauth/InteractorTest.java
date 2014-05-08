@@ -169,6 +169,72 @@ public class InteractorTest {
                         assertThat(runRequest().getBody(), is(originRequester.responses.get(0).getBody()));
                     }
                 }
+                public class AndResponseCodeIs401{
+                    @Before
+                    public void setUp(){
+                        originRequester.responses.add(new BaseResponse(401, "Access token expired "));
+                        originRequester.responses.add(new BaseResponse(200, "Success"));
+                    }
+                    public class WhenRunARefreshRequest{
+                        public class AndResponseCodeIs400{
+                            @Before
+                            public void setUp(){
+                                originRequester.responses.set(1, new BaseResponse(400, "Internal Error"));
+                            }
+                            @Test(expected = InternalError.class)
+                            public void shouldReturnAnInternalErrorException(){
+                                runRequest();
+                            }
+                        }
+                        public class AndResponseCodeIs401Again{
+                            @Before
+                            public void setUp(){
+                                originRequester.responses.set(1, new BaseResponse(401,"Refresh Fail"));
+                                originRequester.responses.add(new BaseResponse(200, "{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
+                                originRequester.responses.add(new BaseResponse(200, "Successfull FinalRequest"));
+                            }
+                            @Test
+                            public void shouldReturnCorrectFinalResponseBody(){
+                                assertThat(runRequest().getBody(), is(originRequester.responses.get(3).getBody()));
+                            }
+                            @Test
+                            public void shouldReturnCorrectFinalResponseCode(){
+                                assertThat(runRequest().getBody(), is(originRequester.responses.get(3).getBody()));
+                            }
+                        }
+                        public class AndResponseCodeIs200{
+                            @Before
+                            public void setUp(){
+                                originRequester.responses.set(1, new BaseResponse(200, "{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
+                                originRequester.responses.add(new BaseResponse(200, "Successfull FinalRequest"));
+                            }
+                            @Test
+                            public void setTokenShouldBeCalled(){
+                                runRequest();
+                                assertThat(storage.isSetCalled, is(true));
+                            }
+                            @Test
+                            public void shouldReturnCorrectFinalResponseBody(){
+                                assertThat(runRequest().getBody(), is(originRequester.responses.get(2).getBody()));
+                            }
+                            @Test
+                            public void shouldReturnCorrectFinalResponseCode(){
+                                assertThat(runRequest().getBody(), is(originRequester.responses.get(2).getBody()));
+                            }
+
+                        }
+                        public class AndResponseCodeIs200ButResponseIsWrong{
+                            @Before
+                            public void setUp(){
+                                originRequester.responses.set(1, new BaseResponse(200, "{}"));
+                            }
+                            @Test(expected = InvalidTokensResponse.class)
+                            public void setTokenShouldBeCalled(){
+                                runRequest();
+                            }
+                        }
+                    }
+                }
             }
         }
 
