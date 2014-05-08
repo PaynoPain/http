@@ -1,64 +1,55 @@
 package com.touchiteasy.oauth;
 
 import com.touchiteasy.http.*;
-import java.io.IOException;
 
 public class Interactor implements ResourceRequester{
     private final ResourceRequester requester;
     private final TokensStorage tokens;
     private final Client client;
     private final User user;
+    private final String tokensURL;
 
-    public Interactor(ResourceRequester requester, TokensStorage storage, Client client, User user) {
+    public Interactor(ResourceRequester requester, TokensStorage storage, Client client, User user, String tokensURL) {
         this.requester = requester;
         this.tokens = storage;
         this.client = client;
         this.user = user;
+        this.tokensURL = tokensURL;
     }
 
     @Override
-    public Response run(Request request) throws IOException {
-        if (tokens.isEmpty()) {
-            tokens.set(new JsonTokens(getLoginResponse(request)));
-        }
-        Response finalResponse = runRequest(request);
+    public Response run(Request request){
+        if(tokens.isEmpty()){
+            Response res = getResponseLoginResponse();
+            throwIfResponseIsNotSuccess(res);
 
-        if(finalResponse.getStatusCode()==401){
-            tokens.set(new JsonTokens(getRefreshResponse(request)));
-            finalResponse = runRequest(request);
-        }
-        if(finalResponse.getStatusCode()==400){
-            throw new IOException();
-        }
+            tokens.set(new JsonTokens(res));
 
-        return finalResponse;
+            Request req = new ResourceRequest(tokens.get(), request);
+
+            Response finalResponse = requester.run(req);
+
+            if (finalResponse.getStatusCode()==401){
+                throw new AuthenticationError("Exception to Authenticate");
+            }
+            return finalResponse;
+        }else{
+            Request req = new ResourceRequest(tokens.get(), request);
+            return requester.run(req);
+        }
     }
 
-    private Response runRequest(Request request) throws IOException {
-        Request req = new ResourceRequest(tokens.get(), request);
+    private Response getResponseLoginResponse() {
+        Request req = new LoginRequest(user, new ClientContext(client,new BaseRequest(tokensURL)));
         return requester.run(req);
     }
 
-    private Response getLoginResponse(Request request) throws IOException {
-        Request req = new ClientContext(
-                client,
-                new LoginRequest(
-                        user,
-                        request
-                )
-        );
-
-        return requester.run(req);
-    }
-    private Response getRefreshResponse(Request request) throws IOException {
-        Request req = new ClientContext(
-                client,
-                new RefreshTokensRequest(
-                        tokens.get(),
-                        request
-                )
-        );
-
-        return requester.run(req);
+    private void throwIfResponseIsNotSuccess(Response res) {
+        if(res.getStatusCode()==400){
+            throw new InternalError("Internal Error");
+        }
+        if(res.getStatusCode()==401){
+            throw new AuthenticationError("Wrong user or password");
+        }
     }
 }
