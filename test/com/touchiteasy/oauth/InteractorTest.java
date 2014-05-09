@@ -6,20 +6,21 @@ import org.junit.runner.RunWith;
 
 import com.touchiteasy.http.*;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-class RequesterSpy implements ResourceRequester{
+class RequesterSpy implements ResourceRequester {
     List<Response> responses = new ArrayList<Response>();
     List<Request> requests = new ArrayList<Request>();
 
     private int responseIndex = 0;
 
     @Override
-    public Response run(Request request){
+    public Response run(Request request) {
         requests.add(request);
 
         Response r = responses.get(responseIndex);
@@ -112,124 +113,150 @@ public class InteractorTest {
     User user;
 
     static final String GET_TOKENS_URL = "http://www.touchItEasy.com/oauth/token";
+
     @Before
-    public void setUp(){
-        client = new Client ("clientId", "clientSecret");
+    public void setUp() {
+        client = new Client("clientId", "clientSecret");
         user = new User("username", "password");
     }
 
     public class GivenARequesterSpy {
-        RequesterSpy originRequester;
+        RequesterSpy resourceRequester;
+        RequesterSpy postRequester;
+
         @Before
-        public void setUp(){
-            originRequester = new RequesterSpy();
+        public void setUp() {
+            resourceRequester = new RequesterSpy();
+            postRequester = new RequesterSpy();
         }
+
         public class AndATokensStorageWithData {
             TokensStorageWithData storage;
+
             @Before
-            public void setUp(){
+            public void setUp() {
                 storage = new TokensStorageWithData();
             }
-            public class WhenRunARequest{
+
+            public class WhenRunARequest {
                 @Before
-                public void setUp(){
-                    interactor = new Interactor(originRequester, storage, client, user, GET_TOKENS_URL);
+                public void setUp() {
+                    interactor = new Interactor(resourceRequester, resourceRequester, storage, client, user, GET_TOKENS_URL);
                 }
-                public class AndResponseCodeIs200{
+
+                public class AndResponseCodeIs200 {
                     @Before
-                    public void setUp(){
-                        originRequester.responses.add(new BaseResponse(200, "Success"));
+                    public void setUp() {
+                        resourceRequester.responses.add(new BaseResponse(200, "Success"));
                     }
+
                     @Test
-                    public void shouldPassTheAccessTokenParameter(){
+                    public void shouldPassTheAccessTokenParameter() {
                         runRequest();
-                        assertThat(originRequester.requests.get(0).getParameters().containsKey("access_token"), is(true));
-                        assertThat(originRequester.requests.get(0).getParameters().get("access_token"),is("access"));
+                        assertThat(resourceRequester.requests.get(0).getParameters().containsKey("access_token"), is(true));
+                        assertThat(resourceRequester.requests.get(0).getParameters().get("access_token"), is("access"));
                     }
+
                     @Test
-                    public void shouldReturnResponseCode(){
-                        assertThat(runRequest().getStatusCode(), is(originRequester.responses.get(0).getStatusCode()));
+                    public void shouldReturnResponseCode() {
+                        assertThat(runRequest().getStatusCode(), is(resourceRequester.responses.get(0).getStatusCode()));
                     }
+
                     @Test
-                    public void shouldReturnResponseBody(){
-                        assertThat(runRequest().getBody(), is(originRequester.responses.get(0).getBody()));
+                    public void shouldReturnResponseBody() {
+                        assertThat(runRequest().getBody(), is(resourceRequester.responses.get(0).getBody()));
                     }
                 }
-                public class AndResponseCodeIs400{
+
+                public class AndResponseCodeIs400 {
                     @Before
-                    public void setUp(){
-                        originRequester.responses.add(new BaseResponse(400, "Fail"));
+                    public void setUp() {
+                        resourceRequester.responses.add(new BaseResponse(400, "Fail"));
                     }
+
                     @Test
-                    public void shouldReturnResponseCode(){
-                        assertThat(runRequest().getStatusCode(), is(originRequester.responses.get(0).getStatusCode()));
+                    public void shouldReturnResponseCode() {
+                        assertThat(runRequest().getStatusCode(), is(resourceRequester.responses.get(0).getStatusCode()));
                     }
+
                     @Test
-                    public void shouldReturnResponseBody(){
-                        assertThat(runRequest().getBody(), is(originRequester.responses.get(0).getBody()));
+                    public void shouldReturnResponseBody() {
+                        assertThat(runRequest().getBody(), is(resourceRequester.responses.get(0).getBody()));
                     }
                 }
-                public class AndResponseCodeIs401{
+
+                public class AndResponseCodeIs401 {
                     @Before
-                    public void setUp(){
-                        originRequester.responses.add(new BaseResponse(401, "Access token expired "));
-                        originRequester.responses.add(new BaseResponse(200, "Success"));
+                    public void setUp() {
+                        resourceRequester.responses.add(new BaseResponse(401, "Access token expired "));
+                        resourceRequester.responses.add(new BaseResponse(200, "Success"));
                     }
-                    public class WhenRunARefreshRequest{
-                        public class AndResponseCodeIs400{
+
+                    public class WhenRunARefreshRequest {
+                        public class AndResponseCodeIs400 {
                             @Before
-                            public void setUp(){
-                                originRequester.responses.set(1, new BaseResponse(400, "Internal Error"));
+                            public void setUp() {
+                                resourceRequester.responses.set(1, new BaseResponse(400, "Internal Error"));
                             }
+
                             @Test(expected = InternalError.class)
-                            public void shouldReturnAnInternalErrorException(){
+                            public void shouldReturnAnInternalErrorException() {
                                 runRequest();
                             }
                         }
-                        public class AndResponseCodeIs401Again{
+
+                        public class AndResponseCodeIs401Again {
                             @Before
-                            public void setUp(){
-                                originRequester.responses.set(1, new BaseResponse(401,"Refresh Fail"));
-                                originRequester.responses.add(new BaseResponse(200, "{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
-                                originRequester.responses.add(new BaseResponse(200, "Successfull FinalRequest"));
+                            public void setUp() {
+                                resourceRequester.responses.set(1, new BaseResponse(401, "Refresh Fail"));
+                                resourceRequester.responses.add(new BaseResponse(200, "{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
+                                resourceRequester.responses.add(new BaseResponse(200, "Successfull FinalRequest"));
                             }
+
                             @Test
-                            public void shouldReturnCorrectFinalResponseBody(){
-                                assertThat(runRequest().getBody(), is(originRequester.responses.get(3).getBody()));
+                            public void shouldReturnCorrectFinalResponseBody() {
+                                assertThat(runRequest().getBody(), is(resourceRequester.responses.get(3).getBody()));
                             }
+
                             @Test
-                            public void shouldReturnCorrectFinalResponseCode(){
-                                assertThat(runRequest().getBody(), is(originRequester.responses.get(3).getBody()));
+                            public void shouldReturnCorrectFinalResponseCode() {
+                                assertThat(runRequest().getBody(), is(resourceRequester.responses.get(3).getBody()));
                             }
                         }
-                        public class AndResponseCodeIs200{
+
+                        public class AndResponseCodeIs200 {
                             @Before
-                            public void setUp(){
-                                originRequester.responses.set(1, new BaseResponse(200, "{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
-                                originRequester.responses.add(new BaseResponse(200, "Successfull FinalRequest"));
+                            public void setUp() {
+                                resourceRequester.responses.set(1, new BaseResponse(200, "{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
+                                resourceRequester.responses.add(new BaseResponse(200, "Successfull FinalRequest"));
                             }
+
                             @Test
-                            public void setTokenShouldBeCalled(){
+                            public void setTokenShouldBeCalled() {
                                 runRequest();
                                 assertThat(storage.isSetCalled, is(true));
                             }
+
                             @Test
-                            public void shouldReturnCorrectFinalResponseBody(){
-                                assertThat(runRequest().getBody(), is(originRequester.responses.get(2).getBody()));
+                            public void shouldReturnCorrectFinalResponseBody() {
+                                assertThat(runRequest().getBody(), is(resourceRequester.responses.get(2).getBody()));
                             }
+
                             @Test
-                            public void shouldReturnCorrectFinalResponseCode(){
-                                assertThat(runRequest().getBody(), is(originRequester.responses.get(2).getBody()));
+                            public void shouldReturnCorrectFinalResponseCode() {
+                                assertThat(runRequest().getBody(), is(resourceRequester.responses.get(2).getBody()));
                             }
 
                         }
-                        public class AndResponseCodeIs200ButResponseIsWrong{
+
+                        public class AndResponseCodeIs200ButResponseIsWrong {
                             @Before
-                            public void setUp(){
-                                originRequester.responses.set(1, new BaseResponse(200, "{}"));
+                            public void setUp() {
+                                resourceRequester.responses.set(1, new BaseResponse(200, "{}"));
                             }
+
                             @Test(expected = InvalidTokensResponse.class)
-                            public void setTokenShouldBeCalled(){
+                            public void setTokenShouldBeCalled() {
                                 runRequest();
                             }
                         }
@@ -240,93 +267,160 @@ public class InteractorTest {
 
         public class AndAnEmptyTokensStorage {
             EmptyTokensStorage storage;
+
             @Before
-            public void setUp(){
+            public void setUp() {
                 storage = new EmptyTokensStorage();
             }
-            public class WhenRunALoginRequest{
+
+            public class WhenRunALoginRequest {
                 @Before
-                public void setUp(){
-                    interactor = new Interactor(originRequester, storage, client, user, GET_TOKENS_URL);
+                public void setUp() {
+                    interactor = new Interactor(resourceRequester, resourceRequester, storage, client, user, GET_TOKENS_URL);
                 }
-                public class AndResponseCodeIs400{
+
+                public class AndResponseCodeIs400 {
                     @Before
-                    public void setUp(){
-                        originRequester.responses.add(new BaseResponse(401, "Authentication Error"));
+                    public void setUp() {
+                        resourceRequester.responses.add(new BaseResponse(401, "Authentication Error"));
                     }
+
                     @Test(expected = AuthenticationError.class)
-                    public void shouldReturnResponseBody(){
+                    public void shouldReturnResponseBody() {
                         runRequest();
                     }
                 }
-                public class AndResponseCodeIs401{
+
+                public class AndResponseCodeIs401 {
                     @Before
-                    public void setUp(){
-                        originRequester.responses.add(new BaseResponse(400, "Internal Error"));
+                    public void setUp() {
+                        resourceRequester.responses.add(new BaseResponse(400, "Internal Error"));
                     }
+
                     @Test(expected = InternalError.class)
-                    public void shouldReturnResponseBody(){
+                    public void shouldReturnResponseBody() {
                         runRequest();
                     }
                 }
-                public class AndResponseCodeIs200{
+
+                public class AndResponseCodeIs200 {
                     @Before
-                    public void setUp(){
-                        originRequester.responses.add(new BaseResponse(200, "{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
-                        originRequester.responses.add(new BaseResponse(200, "Success"));
+                    public void setUp() {
+                        resourceRequester.responses.add(new BaseResponse(200, "{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
+                        resourceRequester.responses.add(new BaseResponse(200, "Success"));
                     }
+
                     @Test
-                    public void shouldCallSetToken(){
+                    public void shouldCallSetToken() {
                         runRequest();
                         assertThat(storage.isSetCalled, is(true));
                     }
+
                     @Test
-                    public void shouldSetAccessTokenProperly(){
+                    public void shouldSetAccessTokenProperly() {
                         runRequest();
                         assertThat(storage.get().getAccess(), is("f820a39359b7a69436b1c1fdad01a6afbad27f38"));
                     }
+
                     @Test
-                    public void shouldSetRefreshTokenProperly(){
+                    public void shouldSetRefreshTokenProperly() {
                         runRequest();
                         assertThat(storage.get().getRefresh(), is("6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8"));
                     }
-                    public class WhenRunAFinalRequest{
-                        public class AndFinalResponseCodeIs200{
+
+                    public class WhenRunAFinalRequest {
+                        public class AndFinalResponseCodeIs200 {
                             @Test
-                            public void shouldReturnResponseCode(){
-                                assertThat(runRequest().getStatusCode(), is(originRequester.responses.get(1).getStatusCode()));
+                            public void shouldReturnResponseCode() {
+                                assertThat(runRequest().getStatusCode(), is(resourceRequester.responses.get(1).getStatusCode()));
                             }
+
                             @Test
-                            public void shouldReturnResponseBody(){
-                                assertThat(runRequest().getBody(), is(originRequester.responses.get(1).getBody()));
+                            public void shouldReturnResponseBody() {
+                                assertThat(runRequest().getBody(), is(resourceRequester.responses.get(1).getBody()));
                             }
                         }
-                        public class AndFinalResponseCodeIs400{
+
+                        public class AndFinalResponseCodeIs400 {
                             @Before
-                            public void setUp(){
-                                originRequester.responses.set(1, new BaseResponse(400, "Fail"));
+                            public void setUp() {
+                                resourceRequester.responses.set(1, new BaseResponse(400, "Fail"));
                             }
+
                             @Test
-                            public void shouldReturnResponseCode(){
-                                assertThat(runRequest().getStatusCode(), is(originRequester.responses.get(1).getStatusCode()));
+                            public void shouldReturnResponseCode() {
+                                assertThat(runRequest().getStatusCode(), is(resourceRequester.responses.get(1).getStatusCode()));
                             }
+
                             @Test
-                            public void shouldReturnResponseBody(){
-                                assertThat(runRequest().getBody(), is(originRequester.responses.get(1).getBody()));
+                            public void shouldReturnResponseBody() {
+                                assertThat(runRequest().getBody(), is(resourceRequester.responses.get(1).getBody()));
                             }
                         }
-                        public class AndFinalResponseCodeIs401{
+
+                        public class AndFinalResponseCodeIs401 {
                             @Before
-                            public void setUp(){
-                                originRequester.responses.set(1, new BaseResponse(401, "Auth Error"));
+                            public void setUp() {
+                                resourceRequester.responses.set(1, new BaseResponse(401, "Auth Error"));
                             }
+
                             @Test(expected = AuthenticationError.class)
-                            public void shouldReturnResponseBody(){
+                            public void shouldReturnResponseBody() {
                                 runRequest();
                             }
                         }
                     }
                 }
+            }
+        }
+
+        public class WhenRunAResourceRequest {
+            TokensStorageWithData storage;
+
+            @Before
+            public void setUp() {
+                storage = new TokensStorageWithData();
+                interactor = new Interactor(resourceRequester, postRequester, storage, client, user, GET_TOKENS_URL);
+                resourceRequester.responses.add(new BaseResponse(401, "need refresh"));
+                postRequester.responses.add(new BaseResponse(200,"{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
+                resourceRequester.responses.add(new BaseResponse(200,"Ok"));
+            }
+
+            @Test
+            public void shouldCallResourceRequesterTwice() {
+                runRequest();
+                assertThat(resourceRequester.requests.size(), is(2));
+            }
+            @Test
+            public void shouldCallResourceRequesterOnce() {
+                runRequest();
+                assertThat(postRequester.requests.size(), is(1));
+            }
+
+        }
+        public class WhenRunARequest {
+            EmptyTokensStorage storage;
+
+            @Before
+            public void setUp() {
+                storage = new EmptyTokensStorage();
+                interactor = new Interactor(resourceRequester, postRequester, storage, client, user, GET_TOKENS_URL);
+                postRequester.responses.add(new BaseResponse(200, "{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
+                resourceRequester.responses.add(new BaseResponse(200, "ok"));
+
+            }
+
+            @Test
+            public void shouldCallOauthRequesterOnce() {
+                runRequest();
+                assertThat(postRequester.requests.size(), is(1));
+
+            }
+            @Test
+            public void shouldCallResourceRequesterOnce() {
+                runRequest();
+                assertThat(resourceRequester.requests.size(), is(1));
+
             }
         }
     }
