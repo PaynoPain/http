@@ -14,10 +14,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +51,7 @@ class HttpClient {
                     getString(response.getEntity().getContent())
             );
         } catch (Exception e){
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -105,7 +101,7 @@ class HttpClient {
             response = sb.toString();
 
         } catch (Exception e) {
-            System.out.println("Buffer Error. Error converting result " + e.toString());
+            throw new RuntimeException("Buffer Error. Error converting result " + e.toString(), e);
         }
         return response;
     }
