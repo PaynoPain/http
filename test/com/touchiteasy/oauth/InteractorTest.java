@@ -7,27 +7,8 @@ import org.junit.runner.RunWith;
 import com.touchiteasy.http.*;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
-class RequesterMock implements ResourceRequester {
-    List<Response> responses = new ArrayList<Response>();
-    List<Request> requests = new ArrayList<Request>();
-
-    private int responseIndex = 0;
-
-    @Override
-    public Response run(Request request) {
-        requests.add(request);
-
-        Response r = responses.get(responseIndex);
-        responseIndex++;
-        return r;
-    }
-}
 
 class EmptyTokensStorage implements TokensStorage {
     public boolean isEmptyCalled = false;
