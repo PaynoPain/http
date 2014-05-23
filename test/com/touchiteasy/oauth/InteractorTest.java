@@ -13,7 +13,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-class RequesterSpy implements ResourceRequester {
+class RequesterMock implements ResourceRequester {
     List<Response> responses = new ArrayList<Response>();
     List<Request> requests = new ArrayList<Request>();
 
@@ -121,13 +121,13 @@ public class InteractorTest {
     }
 
     public class GivenARequesterSpy {
-        RequesterSpy resourceRequester;
-        RequesterSpy postRequester;
+        RequesterMock resourceRequester;
+        RequesterMock postRequester;
 
         @Before
         public void setUp() {
-            resourceRequester = new RequesterSpy();
-            postRequester = new RequesterSpy();
+            resourceRequester = new RequesterMock();
+            postRequester = new RequesterMock();
         }
 
         public class AndATokensStorageWithData {
