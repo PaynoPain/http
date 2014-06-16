@@ -13,6 +13,9 @@ public class RequesterMock implements ResourceRequester {
     public Response run(Request request) {
         requests.add(request);
 
+        if (responses.size() <= responseIndex)
+            throw new RuntimeException("There isn't more responses configured!");
+
         Response r = responses.get(responseIndex);
         responseIndex++;
         return r;
