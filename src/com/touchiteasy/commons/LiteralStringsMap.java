@@ -1,4 +1,4 @@
-package com.touchiteasy;
+package com.touchiteasy.commons;
 
 import java.util.HashMap;
 

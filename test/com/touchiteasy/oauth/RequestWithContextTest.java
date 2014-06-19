@@ -1,6 +1,6 @@
 package com.touchiteasy.oauth;
 
-import com.touchiteasy.LiteralStringsMap;
+import com.touchiteasy.commons.LiteralStringsMap;
 import com.touchiteasy.http.BaseRequest;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import org.junit.Before;
