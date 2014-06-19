@@ -1,7 +1,5 @@
 package com.touchiteasy.http;
 
-import com.touchiteasy.LiteralStringsMap;
-
 import java.util.HashMap;
 import java.util.Map;
 
