@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -148,7 +149,18 @@ public class CacheRequesterTest {
 
                 @Test
                 public void ShouldNotAskTheServerAgain(){
-                    cache.run(firstRequest);
+                    Request sameRequest = new Request() {
+                        @Override
+                        public String getResource() {
+                            return firstRequest.getResource();
+                        }
+
+                        @Override
+                        public Map<String, String> getParameters() {
+                            return firstRequest.getParameters();
+                        }
+                    };
+                    cache.run(sameRequest);
                     assertThat(server.requests.size(), is(1));
                 }
             }
