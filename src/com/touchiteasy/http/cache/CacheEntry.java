@@ -1,16 +1,15 @@
 package com.touchiteasy.http.cache;
 
-import com.touchiteasy.http.Request;
 import com.touchiteasy.http.Response;
 
-public class CacheEntry {
-    public final Request tag;
-    public final Policy policy;
-    public final Response datum;
+import java.util.Date;
 
-    public CacheEntry(Request tag, Policy policy, Response datum) {
-        this.tag = tag;
-        this.policy = policy;
-        this.datum = datum;
+public class CacheEntry {
+    public final Date expiration;
+    public final Response response;
+
+    public CacheEntry(Date expiration, Response response) {
+        this.response = response;
+        this.expiration = expiration;
     }
 }
