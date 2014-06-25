@@ -12,4 +12,17 @@ public class CacheEntry {
         this.response = response;
         this.expiration = expiration;
     }
+
+    public int hashCode(){
+        return this.expiration.hashCode() + this.response.hashCode();
+    }
+
+    public boolean equals(Object other){
+        if (!(other instanceof CacheEntry)) return false;
+
+        CacheEntry entry = (CacheEntry) other;
+        return this.expiration.equals(entry.expiration) &&
+                this.response.getStatusCode() == entry.response.getStatusCode() &&
+                this.response.getBody().equals(entry.response.getBody());
+    }
 }
