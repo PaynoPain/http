@@ -2,10 +2,8 @@ package com.touchiteasy.http.cache;
 
 import com.touchiteasy.http.BaseResponse;
 import com.touchiteasy.http.Request;
-import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,7 +12,6 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-@RunWith(HierarchicalContextRunner.class)
 public abstract class CacheStorageContract {
     public abstract CacheStorage createCacheStorage();
 
