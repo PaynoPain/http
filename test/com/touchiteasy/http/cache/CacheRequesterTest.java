@@ -268,6 +268,28 @@ public class CacheRequesterTest {
                     timeGateway.set(new Date(afterDeadlineTime));
                 }
 
+                public class IfTheServerRespondsOk{
+                    Response newResponse;
+
+                    @Before
+                    public void GivenAnotherMockResponse(){
+                        newResponse = new BaseResponse(200, "secondResponse");
+                        server.addResponse(newResponse);
+
+                        actualResponse = cache.run(firstRequest);
+                    }
+
+                    @Test
+                    public void ShouldAskTheServerAgain(){
+                        assertThat(server.requests.size(), is(2));
+                    }
+
+                    @Test
+                    public void ShouldReturnTheResponseFromTheServer() {
+                        assertThat(actualResponse, is(sameInstance(newResponse)));
+                    }
+                }
+
                 public class IfTheServerIsUnavailable{
                     RuntimeException serverException = new RuntimeException("Server unavailable!");
 
