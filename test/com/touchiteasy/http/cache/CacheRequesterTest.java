@@ -70,14 +70,15 @@ public class CacheRequesterTest {
     MutableFactory<Date> timeGateway;
     ServerMock server;
     ResourceRequester cache;
-    Long cacheDuration;
+    Long cacheDuration, timeToRefresh;
 
     @Before
     public void GivenAServer(){
         server = new ServerMock();
         timeGateway = new MutableFactory<Date>(null);
         cacheDuration = 100L;
-        cache = new CacheRequester(server, new CacheStorageInMemory(), timeGateway, cacheDuration);
+        timeToRefresh = 200L;
+        cache = new CacheRequester(server, new CacheStorageInMemory(), timeGateway, cacheDuration, timeToRefresh);
     }
 
     public class IfTheServerIsUnavailable {
@@ -172,7 +173,7 @@ public class CacheRequesterTest {
                 }
             }
 
-            public class AfterCacheExpired {
+            public class JustAfterCacheExpired {
                 Long afterExpiredTime;
 
                 @Before
@@ -254,6 +255,43 @@ public class CacheRequesterTest {
                     @Test
                     public void ShouldReturnThePreviouslyCachedResponse() {
                         assertThat(actualResponse, is(sameInstance(mockResponse)));
+                    }
+                }
+            }
+
+            public class JustAfterDeadline {
+                Long afterDeadlineTime;
+
+                @Before
+                public void ChangeTime(){
+                    afterDeadlineTime = firstRequestTime + cacheDuration + timeToRefresh + 1;
+                    timeGateway.set(new Date(afterDeadlineTime));
+                }
+
+                public class IfTheServerIsUnavailable{
+                    RuntimeException serverException = new RuntimeException("Server unavailable!");
+
+                    @Before
+                    public void GivenAnException(){
+                        server.addResponseFactory(new Factory<Response>() {
+                            @Override
+                            public Response get() {
+                                throw serverException;
+                            }
+                        });
+                    }
+
+                    @Test
+                    public void ShouldThrowTheExceptionFromTheServer(){
+                        RuntimeException thrownException = null;
+
+                        try {
+                            cache.run(new BaseRequest("firstRequest"));
+                        } catch (RuntimeException e){
+                            thrownException = e;
+                        }
+
+                        assertThat(thrownException, is(sameInstance(serverException)));
                     }
                 }
             }

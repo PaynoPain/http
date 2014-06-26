@@ -24,10 +24,11 @@ public class CacheStorageInDirectory implements CacheStorage {
             BufferedReader fileReader = new BufferedReader(new FileReader(getFile(req)));
 
             Date expiration = new Date(Long.valueOf(fileReader.readLine()));
+            Date deadline = new Date(Long.valueOf(fileReader.readLine()));
             Integer statusCode = Integer.valueOf(fileReader.readLine());
             String body = fileReader.readLine();
 
-            return new CacheEntry(expiration, new BaseResponse(statusCode, body));
+            return new CacheEntry(expiration, deadline, new BaseResponse(statusCode, body));
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
@@ -39,10 +40,11 @@ public class CacheStorageInDirectory implements CacheStorage {
             BufferedWriter fileWriter = new BufferedWriter(new FileWriter(getFile(req)));
 
             String expiration = String.valueOf(entry.expiration.getTime());
+            String deadline = String.valueOf(entry.deadline.getTime());
             String statusCode = String.valueOf(entry.response.getStatusCode());
             String body = entry.response.getBody();
 
-            fileWriter.write(expiration + "\n" + statusCode + "\n" + body);
+            fileWriter.write(expiration + "\n" + deadline + "\n" + statusCode + "\n" + body);
             fileWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);

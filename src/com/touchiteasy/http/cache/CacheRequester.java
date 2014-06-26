@@ -12,12 +12,16 @@ public class CacheRequester implements ResourceRequester {
     private final CacheStorage cache;
     private final Factory<Date> timeGateway;
     private final Long cacheDurationInMilliseconds;
+    private final Long timeToRefreshInMilliseconds;
 
-    public CacheRequester(ResourceRequester resourceRequester, CacheStorage storage, Factory<Date> timeGateway, Long cacheDurationInMilliseconds) {
+    public CacheRequester(
+            ResourceRequester resourceRequester, CacheStorage storage, Factory<Date> timeGateway,
+            Long cacheDurationInMilliseconds, Long timeToRefreshAfterCacheExpirationInMilliseconds) {
         requester = resourceRequester;
         cache = storage;
         this.timeGateway = timeGateway;
         this.cacheDurationInMilliseconds = cacheDurationInMilliseconds;
+        this.timeToRefreshInMilliseconds = timeToRefreshAfterCacheExpirationInMilliseconds;
     }
 
     @Override
@@ -31,7 +35,11 @@ public class CacheRequester implements ResourceRequester {
 
             try {
                 entry = runRequest(req);
-            } catch (Throwable ignored){}
+            } catch (RuntimeException e){
+                if (isDeadline(cache.read(req))){
+                    throw e;
+                }
+            }
 
             if (entry != null)
                 cache.write(req, entry);
@@ -42,12 +50,20 @@ public class CacheRequester implements ResourceRequester {
 
     private CacheEntry runRequest(Request req) {
         Response response = requester.run(req);
-        Date expiration = new Date(now().getTime() + cacheDurationInMilliseconds);
-        return new CacheEntry(expiration, response);
+
+        long now = now().getTime();
+        long expiration = now + cacheDurationInMilliseconds;
+        long deadline = expiration + timeToRefreshInMilliseconds;
+
+        return new CacheEntry(new Date(expiration), new Date(deadline), response);
     }
 
     private boolean isOutdated(CacheEntry cacheEntry) {
         return now().after(cacheEntry.expiration);
+    }
+
+    private boolean isDeadline(CacheEntry cacheEntry) {
+        return now().after(cacheEntry.deadline);
     }
 
     private Date now() {
