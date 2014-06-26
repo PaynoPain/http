@@ -141,34 +141,44 @@ public class CacheRequesterTest {
         }
 
         public class AndThenTheSameRequestAgain {
+            private Request createSameRequest() {
+                return new Request() {
+                    @Override
+                    public String getResource() {
+                        return firstRequest.getResource();
+                    }
+
+                    @Override
+                    public Map<String, String> getParameters() {
+                        return firstRequest.getParameters();
+                    }
+                };
+            }
+
             public class JustBeforeCacheExpires {
+                Long beforeExpiredTime;
+
                 @Before
                 public void ChangeTime(){
-                    timeGateway.set(new Date(firstRequestTime + cacheDuration));
+                    beforeExpiredTime = firstRequestTime + cacheDuration;
+                    timeGateway.set(new Date(beforeExpiredTime));
                 }
 
                 @Test
                 public void ShouldNotAskTheServerAgain(){
-                    Request sameRequest = new Request() {
-                        @Override
-                        public String getResource() {
-                            return firstRequest.getResource();
-                        }
-
-                        @Override
-                        public Map<String, String> getParameters() {
-                            return firstRequest.getParameters();
-                        }
-                    };
+                    Request sameRequest = createSameRequest();
                     cache.run(sameRequest);
                     assertThat(server.requests.size(), is(1));
                 }
             }
 
             public class AfterCacheExpired {
+                Long afterExpiredTime;
+
                 @Before
                 public void ChangeTime(){
-                    timeGateway.set(new Date(firstRequestTime + cacheDuration +1));
+                    afterExpiredTime = firstRequestTime + cacheDuration + 1;
+                    timeGateway.set(new Date(afterExpiredTime));
                 }
 
                 public class IfTheServerRespondsOk{
@@ -190,6 +200,36 @@ public class CacheRequesterTest {
                     @Test
                     public void ShouldReturnTheResponseFromTheServer() {
                         assertThat(actualResponse, is(sameInstance(newResponse)));
+                    }
+
+                    public class AndSameRequestBeforeNewExpiration {
+                        @Before
+                        public void ChangeTime(){
+                            long beforeNewExpiration = afterExpiredTime + cacheDuration;
+                            timeGateway.set(new Date(beforeNewExpiration));
+                        }
+
+                        @Test
+                        public void ShouldNotAskTheServerAgain(){
+                            Request sameRequest = createSameRequest();
+                            cache.run(sameRequest);
+                            assertThat(server.requests.size(), is(2));
+                        }
+                    }
+
+                    public class AndSameRequestAfterNewExpiration {
+                        @Before
+                        public void ChangeTime(){
+                            long afterNewExpiration = afterExpiredTime + cacheDuration +1;
+                            timeGateway.set(new Date(afterNewExpiration));
+                        }
+
+                        @Test
+                        public void ShouldNotAskTheServerAgain(){
+                            Request sameRequest = createSameRequest();
+                            cache.run(sameRequest);
+                            assertThat(server.requests.size(), is(3));
+                        }
                     }
                 }
 
