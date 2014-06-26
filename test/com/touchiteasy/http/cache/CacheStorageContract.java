@@ -27,7 +27,7 @@ public abstract class CacheStorageContract {
     }
 
     private CacheEntry createEntry() {
-        return new CacheEntry(new Date(0), new Date(0), new BaseResponse(200, "body"));
+        return new CacheEntry(new BaseResponse(200, "body"), new Date(0), new Date(0));
     }
 
     private Request createRequest() {

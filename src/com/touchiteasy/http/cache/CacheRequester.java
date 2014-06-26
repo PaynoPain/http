@@ -55,7 +55,7 @@ public class CacheRequester implements ResourceRequester {
         long expiration = now + cacheDurationInMilliseconds;
         long deadline = expiration + timeToRefreshInMilliseconds;
 
-        return new CacheEntry(new Date(expiration), new Date(deadline), response);
+        return new CacheEntry(response, new Date(expiration), new Date(deadline));
     }
 
     private boolean isOutdated(CacheEntry cacheEntry) {

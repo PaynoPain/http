@@ -9,7 +9,7 @@ public class CacheEntry {
     public final Date deadline;
     public final Response response;
 
-    public CacheEntry(Date expiration, Date deadline, Response response) {
+    public CacheEntry(Response response, Date expiration, Date deadline) {
         this.response = response;
         this.expiration = expiration;
         this.deadline = deadline;

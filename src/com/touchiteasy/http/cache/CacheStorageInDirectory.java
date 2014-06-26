@@ -28,7 +28,7 @@ public class CacheStorageInDirectory implements CacheStorage {
             Integer statusCode = Integer.valueOf(fileReader.readLine());
             String body = fileReader.readLine();
 
-            return new CacheEntry(expiration, deadline, new BaseResponse(statusCode, body));
+            return new CacheEntry(new BaseResponse(statusCode, body), expiration, deadline);
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
