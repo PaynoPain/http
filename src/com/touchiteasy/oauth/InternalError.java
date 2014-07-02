@@ -1,6 +1,6 @@
 package com.touchiteasy.oauth;
 
-public class InternalError extends RuntimeException {
+public class InternalError extends OauthException {
     InternalError(String message) {
         super(message);
     }

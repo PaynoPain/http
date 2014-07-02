@@ -1,6 +1,6 @@
 package com.touchiteasy.oauth;
 
-public class AuthenticationError extends RuntimeException {
+public class AuthenticationError extends OauthException {
     AuthenticationError(String message) {
         super(message);
     }
