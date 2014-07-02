@@ -51,7 +51,7 @@ class HttpClient {
                     getString(response.getEntity().getContent())
             );
         } catch (Exception e){
-            throw new RuntimeException(e);
+            throw new HttpException(e);
         }
     }
 
@@ -78,7 +78,7 @@ class HttpClient {
         try {
             entity = new UrlEncodedFormEntity(parameters);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            throw new HttpException(e);
         }
 
         HttpPost httpPost = new HttpPost(url);
@@ -101,7 +101,7 @@ class HttpClient {
             response = sb.toString();
 
         } catch (Exception e) {
-            throw new RuntimeException("Buffer Error. Error converting result " + e.toString(), e);
+            throw new HttpException("Buffer Error. Error converting result " + e.toString(), e);
         }
         return response;
     }
