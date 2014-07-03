@@ -17,7 +17,6 @@ public class Interactor implements ResourceRequester {
         this.client = client;
         this.user = user;
         this.tokensURL = tokensURL;
-
     }
 
     @Override
@@ -44,6 +43,10 @@ public class Interactor implements ResourceRequester {
         }
         return resourceResponse;
 
+    }
+
+    public boolean canLogin(){
+        return getResponseFromLoginRequest().getStatusCode() == 200;
     }
 
     private Response loginRequest(Request request) {

@@ -404,6 +404,48 @@ public class InteractorTest {
 
             }
         }
+
+        public class WhenCheckingIfCanLogin {
+            @Before
+            public void setUp() {
+                EmptyTokensStorage storage = new EmptyTokensStorage();
+                interactor = new Interactor(resourceRequester, postRequester, storage, client, user, GET_TOKENS_URL);
+            }
+
+            public class WithOkResponseFromServer {
+                @Before
+                public void setUp(){
+                    postRequester.responses.add(
+                            new BaseResponse(
+                                    200,
+                                    "{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"
+                            )
+                    );
+                }
+
+                @Test
+                public void shouldReturnTrue(){
+                    assertThat(interactor.canLogin(), is(true));
+                }
+            }
+
+            public class WithAuthErrorFromServer {
+                @Before
+                public void setUp(){
+                    postRequester.responses.add(
+                            new BaseResponse(
+                                    400,
+                                    "{\"error\":\"invalid_client\",\"error_description\":\"The client credentials are invalid\"}"
+                            )
+                    );
+                }
+
+                @Test
+                public void shouldReturnFalse(){
+                    assertThat(interactor.canLogin(), is(false));
+                }
+            }
+        }
     }
 
     private Response runRequest() {
