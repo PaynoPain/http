@@ -2,6 +2,7 @@ package com.touchiteasy.oauth;
 
 import com.touchiteasy.commons.LiteralStringsMap;
 import com.touchiteasy.http.Request;
+import com.touchiteasy.http.RequestWithContext;
 
 public class ClientContext extends RequestWithContext {
     public ClientContext(Client client, Request base){

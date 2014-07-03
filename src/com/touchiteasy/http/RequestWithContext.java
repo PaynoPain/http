@@ -1,6 +1,4 @@
-package com.touchiteasy.oauth;
-
-import com.touchiteasy.http.Request;
+package com.touchiteasy.http;
 
 import java.util.HashMap;
 import java.util.Map;
