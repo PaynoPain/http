@@ -1,7 +1,15 @@
 package com.touchiteasy.http.cache;
 
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class CacheStorageInDirectoryTest extends CacheStorageContract {
     @Rule
@@ -10,5 +18,21 @@ public class CacheStorageInDirectoryTest extends CacheStorageContract {
     @Override
     public CacheStorage createCacheStorage() {
         return new CacheStorageInDirectory(testFolder.getRoot());
+    }
+
+    @Test
+    public void GivenACorruptedFile_ShouldIgnoreIt() throws IOException {
+        createCorruptedFile();
+        assertThat(storage.contains(request), is(false));
+    }
+
+    private void createCorruptedFile() throws IOException {
+        storage.write(request, entry);
+
+        File cacheEntryFile = testFolder.getRoot().listFiles()[0];
+
+        final FileWriter writer = new FileWriter(cacheEntryFile);
+        writer.write("");
+        writer.close();
     }
 }

@@ -15,9 +15,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public abstract class CacheStorageContract {
     public abstract CacheStorage createCacheStorage();
 
-    private CacheStorage storage;
-    private Request request;
-    private CacheEntry entry;
+    protected CacheStorage storage;
+    protected Request request;
+    protected CacheEntry entry;
 
     @Before
     public void setUp(){
