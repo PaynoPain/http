@@ -1,5 +1,6 @@
 package com.touchiteasy.http.cache;
 
+import com.touchiteasy.http.Request;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -21,12 +22,13 @@ public class CacheStorageInDirectoryTest extends CacheStorageContract {
     }
 
     @Test
-    public void GivenACorruptedFile_ShouldIgnoreIt() throws IOException {
-        createCorruptedFile();
+    public void GivenACorruptedFile_ShouldDeleteIt() throws IOException {
+        createCorruptedFile(request, entry);
         assertThat(storage.contains(request), is(false));
+        assertThat(testFolder.getRoot().list().length, is(0));
     }
 
-    private void createCorruptedFile() throws IOException {
+    private void createCorruptedFile(Request request, CacheEntry entry) throws IOException {
         storage.write(request, entry);
 
         File cacheEntryFile = testFolder.getRoot().listFiles()[0];
