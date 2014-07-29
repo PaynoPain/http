@@ -16,7 +16,21 @@ public class CacheStorageInDirectory implements CacheStorage {
     @Override
     public boolean contains(Request req) {
         final File file = getFile(req);
+
+        if (!isValid(file)){
+            file.delete();
+        }
+
         return file.exists();
+    }
+
+    private boolean isValid(File file) {
+        try {
+            parse(readFile(file));
+            return true;
+        } catch (Throwable t){
+            return false;
+        }
     }
 
     @Override
