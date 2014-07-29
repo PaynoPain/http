@@ -20,6 +20,9 @@ public class CacheStorageInDirectory implements CacheStorage {
 
     @Override
     public CacheEntry read(Request req) {
+        if (!contains(req))
+            throw new IllegalStateException("There is no cached entry for the resource: " + req.getResource());
+
         final File file = getFile(req);
         try {
             BufferedReader fileReader = new BufferedReader(new FileReader(file));

@@ -49,6 +49,11 @@ public abstract class CacheStorageContract {
         assertThat(storage.contains(request), is(false));
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void BeforeStoringARequest_WhenReadingIt_ThrowsException() {
+        storage.read(createRequest());
+    }
+
     @Test
     public void AfterStoringAnEntry_ShouldContainTheAssociatedRequest(){
         storage.write(request, entry);

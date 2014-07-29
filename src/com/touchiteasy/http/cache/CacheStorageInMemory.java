@@ -9,6 +9,9 @@ public class CacheStorageInMemory implements CacheStorage {
     private Map<Request, CacheEntry> cache = new HashMap<Request, CacheEntry>();
 
     public CacheEntry read(Request req){
+        if (!contains(req))
+            throw new IllegalStateException("There is no cached entry for the resource: " + req.getResource());
+
         return cache.get(new HashedRequest(req));
     }
 
