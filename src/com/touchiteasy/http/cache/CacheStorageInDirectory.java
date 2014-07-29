@@ -20,8 +20,9 @@ public class CacheStorageInDirectory implements CacheStorage {
 
     @Override
     public CacheEntry read(Request req) {
+        final File file = getFile(req);
         try {
-            BufferedReader fileReader = new BufferedReader(new FileReader(getFile(req)));
+            BufferedReader fileReader = new BufferedReader(new FileReader(file));
 
             Date expiration = new Date(Long.valueOf(fileReader.readLine()));
             Date deadline = new Date(Long.valueOf(fileReader.readLine()));
@@ -29,15 +30,19 @@ public class CacheStorageInDirectory implements CacheStorage {
             String body = fileReader.readLine();
 
             return new CacheEntry(new BaseResponse(statusCode, body), expiration, deadline);
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "Can't read the stored cache for " + req.getResource() + " at " + file.getAbsolutePath(),
+                    e
+            );
         }
     }
 
     @Override
     public void write(Request req, CacheEntry entry) {
+        final File file = getFile(req);
         try {
-            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(getFile(req)));
+            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file));
 
             String expiration = String.valueOf(entry.expiration.getTime());
             String deadline = String.valueOf(entry.deadline.getTime());
@@ -47,7 +52,10 @@ public class CacheStorageInDirectory implements CacheStorage {
             fileWriter.write(expiration + "\n" + deadline + "\n" + statusCode + "\n" + body);
             fileWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(
+                    "Can't write a cache entry for " + req.getResource() + " at " + file.getAbsolutePath(),
+                    e
+            );
         }
     }
 
