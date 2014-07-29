@@ -15,7 +15,8 @@ public class CacheStorageInDirectory implements CacheStorage {
 
     @Override
     public boolean contains(Request req) {
-        return getFile(req).exists();
+        final File file = getFile(req);
+        return file.exists();
     }
 
     @Override
@@ -23,21 +24,37 @@ public class CacheStorageInDirectory implements CacheStorage {
         if (!contains(req))
             throw new IllegalStateException("There is no cached entry for the resource: " + req.getResource());
 
-        final File file = getFile(req);
+        return parse(readFile(getFile(req)));
+    }
+
+    private String readFile(File file) {
         try {
-            BufferedReader fileReader = new BufferedReader(new FileReader(file));
+            FileInputStream fis = new FileInputStream(file);
+            byte[] data = new byte[(int)file.length()];
+            fis.read(data);
+            fis.close();
 
-            Date expiration = new Date(Long.valueOf(fileReader.readLine()));
-            Date deadline = new Date(Long.valueOf(fileReader.readLine()));
-            Integer statusCode = Integer.valueOf(fileReader.readLine());
-            String body = fileReader.readLine();
-
-            return new CacheEntry(new BaseResponse(statusCode, body), expiration, deadline);
+            return new String(data, "UTF-8");
         } catch (IOException e) {
             throw new RuntimeException(
-                    "Can't read the stored cache for " + req.getResource() + " at " + file.getAbsolutePath(),
+                    "Can't read the stored cache entry at " + file.getAbsolutePath(),
                     e
             );
+        }
+    }
+
+    private CacheEntry parse(String data) {
+        String[] lines = data.split(System.getProperty("line.separator"));
+
+        try {
+            Date expiration = new Date(Long.valueOf(lines[0]));
+            Date deadline = new Date(Long.valueOf(lines[1]));
+            Integer statusCode = Integer.valueOf(lines[2]);
+            String body = lines[3];
+
+            return new CacheEntry(new BaseResponse(statusCode, body), expiration, deadline);
+        } catch (Throwable t){
+            throw new IllegalArgumentException("The following data is not a valid CacheEntry: \n\"" + data + "\"", t);
         }
     }
 
