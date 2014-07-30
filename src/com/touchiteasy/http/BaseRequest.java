@@ -34,16 +34,4 @@ public class BaseRequest implements Request {
     public Map<String, String> getParameters() {
         return this.parameters;
     }
-
-    @Override
-    public int hashCode() {
-        return this.resource.hashCode() + this.parameters.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Request &&
-                this.resource.equals(((Request) obj).getResource()) &&
-                this.parameters.equals(((Request) obj).getParameters());
-    }
 }
