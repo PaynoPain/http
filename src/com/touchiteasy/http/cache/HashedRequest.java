@@ -32,4 +32,14 @@ public class HashedRequest implements Request {
                 this.base.getResource().equals(((Request) obj).getResource()) &&
                 this.base.getParameters().equals(((Request) obj).getParameters());
     }
+
+    @Override
+    public String toString() {
+        return "Resource: " + base.getResource() +
+                "\nParameters: " + mapToString(base.getParameters());
+    }
+
+    private String mapToString(Map<String, String> map) {
+        return map.toString();
+    }
 }
