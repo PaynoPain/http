@@ -27,4 +27,10 @@ public class CacheEntry {
                 this.response.getStatusCode() == entry.response.getStatusCode() &&
                 this.response.getBody().equals(entry.response.getBody());
     }
+
+    public String toString(){
+        return "Expiration: " + expiration.toString() +
+                "\nDeadline: " + deadline.toString() +
+                "\nResponse: " + response.toString();
+    }
 }
