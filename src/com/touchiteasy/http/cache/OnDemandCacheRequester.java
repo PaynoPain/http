@@ -7,14 +7,14 @@ import com.touchiteasy.http.Response;
 
 import java.util.Date;
 
-public class CacheRequester implements ResourceRequester {
+public class OnDemandCacheRequester implements ResourceRequester {
     private final ResourceRequester requester;
     private final CacheStorage cache;
     private final Factory<Date> timeGateway;
     private final Long cacheDurationInMilliseconds;
     private final Long timeToRefreshInMilliseconds;
 
-    public CacheRequester(
+    public OnDemandCacheRequester(
             ResourceRequester resourceRequester, CacheStorage storage, Factory<Date> timeGateway,
             Long cacheDurationInMilliseconds, Long timeToRefreshAfterCacheExpirationInMilliseconds) {
         requester = resourceRequester;

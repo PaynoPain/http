@@ -66,7 +66,7 @@ class MutableFactory<T> implements Factory<T> {
 }
 
 @RunWith(HierarchicalContextRunner.class)
-public class CacheRequesterTest {
+public class OnDemandCacheRequesterTest {
     MutableFactory<Date> timeGateway;
     ServerMock server;
     ResourceRequester cache;
@@ -78,7 +78,7 @@ public class CacheRequesterTest {
         timeGateway = new MutableFactory<Date>(null);
         cacheDuration = 100L;
         timeToRefresh = 200L;
-        cache = new CacheRequester(server, new CacheStorageInMemory(), timeGateway, cacheDuration, timeToRefresh);
+        cache = new OnDemandCacheRequester(server, new CacheStorageInMemory(), timeGateway, cacheDuration, timeToRefresh);
     }
 
     public class IfTheServerIsUnavailable {
