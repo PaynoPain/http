@@ -2,10 +2,10 @@ package com.touchiteasy.http;
 
 import java.util.Map;
 
-public class HashedRequest implements Request {
+public class IdentifiableRequest implements Request {
     private Request base;
 
-    public HashedRequest(Request base){
+    public IdentifiableRequest(Request base){
         this.base = base;
     }
 

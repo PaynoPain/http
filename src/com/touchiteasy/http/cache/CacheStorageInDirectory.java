@@ -1,7 +1,7 @@
 package com.touchiteasy.http.cache;
 
 import com.touchiteasy.http.BaseResponse;
-import com.touchiteasy.http.HashedRequest;
+import com.touchiteasy.http.IdentifiableRequest;
 import com.touchiteasy.http.Request;
 
 import java.io.*;
@@ -96,7 +96,7 @@ public class CacheStorageInDirectory implements CacheStorage {
     }
 
     private File getFile(Request req) {
-        return new File(this.baseDirectory, String.valueOf(new HashedRequest(req).hashCode()));
+        return new File(this.baseDirectory, String.valueOf(new IdentifiableRequest(req).hashCode()));
     }
 }
 
