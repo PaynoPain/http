@@ -1,5 +1,6 @@
 package com.touchiteasy.http.cache;
 
+import com.touchiteasy.http.HashedRequest;
 import com.touchiteasy.http.Request;
 
 import java.util.HashMap;

@@ -1,6 +1,4 @@
-package com.touchiteasy.http.cache;
-
-import com.touchiteasy.http.Request;
+package com.touchiteasy.http;
 
 import java.util.Map;
 

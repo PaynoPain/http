@@ -1,6 +1,7 @@
 package com.touchiteasy.http.cache;
 
 import com.touchiteasy.http.BaseResponse;
+import com.touchiteasy.http.HashedRequest;
 import com.touchiteasy.http.Request;
 
 import java.io.*;
