@@ -38,23 +38,24 @@ public class CacheStorageInDirectory implements CacheStorage {
         if (!contains(req))
             throw new IllegalStateException("There is no cached entry for the resource: " + req.getResource());
 
-        return parse(readFile(getFile(req)));
-    }
-
-    private String readFile(File file) {
+        final File file = getFile(req);
         try {
-            FileInputStream fis = new FileInputStream(file);
-            byte[] data = new byte[(int)file.length()];
-            fis.read(data);
-            fis.close();
-
-            return new String(data, "UTF-8");
-        } catch (IOException e) {
+            return parse(readFile(file));
+        } catch (Throwable t) {
             throw new RuntimeException(
                     "Can't read the stored cache entry at " + file.getAbsolutePath(),
-                    e
+                    t
             );
         }
+    }
+
+    private String readFile(File file) throws IOException {
+        FileInputStream fis = new FileInputStream(file);
+        byte[] data = new byte[(int)file.length()];
+        fis.read(data);
+        fis.close();
+
+        return new String(data, "UTF-8");
     }
 
     private CacheEntry parse(String data) {
