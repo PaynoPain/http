@@ -1,6 +1,7 @@
 package com.touchiteasy.http.cache;
 
 import com.touchiteasy.commons.Factory;
+import com.touchiteasy.commons.MutableFactory;
 import com.touchiteasy.http.*;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import org.junit.Before;
@@ -45,23 +46,6 @@ class ServerMock implements ResourceRequester {
         Response r = responseFactories.get(responseIndex).get();
         responseIndex++;
         return r;
-    }
-}
-
-class MutableFactory<T> implements Factory<T> {
-    private T value;
-
-    public MutableFactory(T initialValue){
-        set(initialValue);
-    }
-
-    public void set(T value){
-        this.value = value;
-    }
-
-    @Override
-    public T get() {
-        return value;
     }
 }
 
