@@ -137,6 +137,19 @@ public class ResponseValidatingRequesterTest {
             public void ShouldThrowInvalidResponseException() {
                 requester.run(request);
             }
+
+            @Test
+            public void TheExceptionsMessageShouldContainTheCauseDescription() {
+                ResponseValidatingRequester.InvalidResponseException exception = null;
+
+                try {
+                    requester.run(request);
+                } catch (ResponseValidatingRequester.InvalidResponseException e){
+                    exception = e;
+                }
+
+                assertThat(exception.getMessage(), containsString("the only valid status codes are [200, 201]"));
+            }
         }
     }
 }
