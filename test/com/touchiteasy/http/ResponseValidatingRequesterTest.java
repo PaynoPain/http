@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
+
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -88,6 +90,52 @@ public class ResponseValidatingRequesterTest {
             public void SouldReturnTheResponse() {
                 Response actual = requester.run(request);
                 assertThat(actual, is(response));
+            }
+        }
+    }
+
+    public class GivenAValidatorThatOnlyAcceptsResponsesWithStatusCode200Or201 {
+        private ResponseValidatingRequester.ResponseValidator validator = new ValidStatusCodesValidator(Arrays.asList(200, 201));
+
+        public class WhenTheResponseHasStatusCode200 {
+            @Before
+            public void setUp() {
+                response = new BaseResponse(200, "body");
+                mock.responses.add(response);
+                requester = new ResponseValidatingRequester(mock, validator);
+            }
+
+            @Test
+            public void ShouldReturnTheResponse() {
+                assertThat(requester.run(request), is(response));
+            }
+        }
+
+        public class WhenTheResponseHasStatusCode201 {
+            @Before
+            public void setUp() {
+                response = new BaseResponse(201, "body");
+                mock.responses.add(response);
+                requester = new ResponseValidatingRequester(mock, validator);
+            }
+
+            @Test
+            public void ShouldReturnTheResponse() {
+                assertThat(requester.run(request), is(response));
+            }
+        }
+
+        public class WhenTheResponseHasStatusCodeIs500 {
+            @Before
+            public void setUp() {
+                response = new BaseResponse(500, "body");
+                mock.responses.add(response);
+                requester = new ResponseValidatingRequester(mock, validator);
+            }
+
+            @Test (expected = ResponseValidatingRequester.InvalidResponseException.class)
+            public void ShouldThrowInvalidResponseException() {
+                requester.run(request);
             }
         }
     }
