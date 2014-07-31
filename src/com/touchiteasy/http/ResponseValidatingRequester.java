@@ -25,7 +25,11 @@ public class ResponseValidatingRequester implements ResourceRequester {
         Response response = baseRequester.run(request);
 
         if (!validator.isValid(response))
-            throw new InvalidResponseException(this.validator.getCauseDescription());
+            throw new InvalidResponseException(String.format(
+                    "The following response is invalid because %s.\n%s",
+                    this.validator.getCauseDescription(),
+                    new IdentifiableResponse(response).toString()
+            ));
 
         return response;
     }
