@@ -1,11 +1,11 @@
 package com.touchiteasy.http;
 
-import java.util.List;
+import java.util.Collection;
 
 public class ValidStatusCodesValidator implements ResponseValidatingRequester.ResponseValidator {
-    private final List<Integer> validStatusCodes;
+    private final Collection<Integer> validStatusCodes;
 
-    public ValidStatusCodesValidator(List<Integer> validStatusCodes){
+    public ValidStatusCodesValidator(Collection<Integer> validStatusCodes){
         this.validStatusCodes = validStatusCodes;
     }
 
