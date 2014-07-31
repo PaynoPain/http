@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(HierarchicalContextRunner.class)
@@ -13,9 +14,11 @@ public class ResponseValidatingRequesterTest {
     private RequesterMock mock;
     private ResponseValidatingRequester requester;
     private Request request;
+    private Response response;
 
     @Before
     public void setUp() {
+        mock = new RequesterMock();
         request = new BaseRequest("http://www.google.es");
     }
 
@@ -34,6 +37,8 @@ public class ResponseValidatingRequesterTest {
 
         @Before
         public void setUp() {
+            response = new BaseResponse(200, "body");
+            mock.responses.add(response);
             requester = new ResponseValidatingRequester(mock, everythingInvalidator);
         }
 
@@ -54,6 +59,35 @@ public class ResponseValidatingRequesterTest {
                 }
 
                 assertThat(exception.getMessage(), containsString(everythingInvalidator.getCauseDescription()));
+            }
+        }
+    }
+
+    public class GivenAValidatorThatDictatesEveryResponseIsValid {
+        private ResponseValidatingRequester.ResponseValidator everythingValidator = new ResponseValidatingRequester.ResponseValidator() {
+            @Override
+            public boolean isValid(Response response) {
+                return true;
+            }
+
+            @Override
+            public String getCauseDescription() {
+                return "everything is valid";
+            }
+        };
+
+        @Before
+        public void setUp() {
+            response = new BaseResponse(500, "body");
+            mock.responses.add(response);
+            requester = new ResponseValidatingRequester(mock, everythingValidator);
+        }
+
+        public class WhenRunningARequest {
+            @Test
+            public void SouldReturnTheResponse() {
+                Response actual = requester.run(request);
+                assertThat(actual, is(response));
             }
         }
     }
