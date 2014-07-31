@@ -83,13 +83,13 @@ public class Interactor implements ResourceRequester {
 
     private void throwIfResponseHaveAuthError(Response res) {
         if (isAuthError(res)) {
-            throw new AuthenticationError("Wrong user or password");
+            throw new AuthenticationError("Wrong user or password" + new IdentifiableResponse(res).toString());
         }
     }
 
     private void throwIfResponseHaveAInternalError(Response res) {
         if (isInternalError(res)) {
-            throw new InternalError("Internal Error");
+            throw new InternalError("Internal Error: " + new IdentifiableResponse(res).toString());
         }
     }
 
