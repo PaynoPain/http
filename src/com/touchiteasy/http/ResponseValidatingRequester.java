@@ -22,6 +22,11 @@ public class ResponseValidatingRequester implements ResourceRequester {
 
     @Override
     public Response run(Request request) {
-        throw new InvalidResponseException(this.validator.getCauseDescription());
+        Response response = baseRequester.run(request);
+
+        if (!validator.isValid(response))
+            throw new InvalidResponseException(this.validator.getCauseDescription());
+
+        return response;
     }
 }
