@@ -3,15 +3,19 @@ package com.touchiteasy.http;
 import java.util.List;
 
 public class ValidStatusCodesValidator implements ResponseValidatingRequester.ResponseValidator {
-    public ValidStatusCodesValidator(List<Integer> validStatusCodes){}
+    private final List<Integer> validStatusCodes;
+
+    public ValidStatusCodesValidator(List<Integer> validStatusCodes){
+        this.validStatusCodes = validStatusCodes;
+    }
 
     @Override
     public boolean isValid(Response response) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return validStatusCodes.contains(response.getStatusCode());
     }
 
     @Override
     public String getCauseDescription() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return String.format("the only valid status codes are %s", validStatusCodes.toString());
     }
 }
