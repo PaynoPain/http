@@ -40,23 +40,30 @@ public class CacheStorageInDirectory implements CacheStorage {
             throw new IllegalStateException("There is no cached entry for the resource: " + req.getResource());
 
         final File file = getFile(req);
-        try {
-            return parse(readFile(file));
-        } catch (Throwable t) {
-            throw new RuntimeException(
-                    "Can't read the stored cache entry at " + file.getAbsolutePath(),
-                    t
-            );
-        }
+        return parse(readFile(file));
     }
 
-    private String readFile(File file) throws IOException {
-        FileInputStream fis = new FileInputStream(file);
-        byte[] data = new byte[(int)file.length()];
-        fis.read(data);
-        fis.close();
+    private String readFile(File file) {
+        FileInputStream fis = null;
 
-        return new String(data, "UTF-8");
+        try {
+            fis = new FileInputStream(file);
+            byte[] data = new byte[(int)file.length()];
+            fis.read(data);
+
+            return new String(data, "UTF-8");
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "Can't read the stored cache entry at " + file.getAbsolutePath(),
+                    e
+            );
+        } finally {
+            if (fis != null){
+                try {
+                    fis.close();
+                } catch (IOException ignored) {}
+            }
+        }
     }
 
     private CacheEntry parse(String data) {
@@ -77,8 +84,9 @@ public class CacheStorageInDirectory implements CacheStorage {
     @Override
     public void write(Request req, CacheEntry entry) {
         final File file = getFile(req);
+        BufferedWriter fileWriter = null;
         try {
-            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file));
+            fileWriter = new BufferedWriter(new FileWriter(file));
 
             String expiration = String.valueOf(entry.expiration.getTime());
             String deadline = String.valueOf(entry.deadline.getTime());
@@ -86,12 +94,17 @@ public class CacheStorageInDirectory implements CacheStorage {
             String body = entry.response.getBody();
 
             fileWriter.write(expiration + "\n" + deadline + "\n" + statusCode + "\n" + body);
-            fileWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(
                     "Can't write a cache entry for " + req.getResource() + " at " + file.getAbsolutePath(),
                     e
             );
+        } finally {
+            if (fileWriter != null){
+                try {
+                    fileWriter.close();
+                } catch (IOException ignored) {}
+            }
         }
     }
 
