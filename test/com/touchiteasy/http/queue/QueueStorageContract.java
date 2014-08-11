@@ -13,13 +13,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNot.not;
 
 public abstract class QueueStorageContract {
-    public abstract QueueStorage createInstance();
+    public abstract FifoStorage<Request> createInstance();
 
     private Request createElement(String resource) {
         return new IdentifiableRequest(new BaseRequest(resource));
     }
 
-    QueueStorage storage;
+    FifoStorage<Request> storage;
 
     @Before
     public void setUp(){
