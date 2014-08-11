@@ -8,46 +8,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.sameInstance;
-
-class ServerMock implements ResourceRequester {
-    public void addResponse(final Response response){
-        responseFactories.add(new Factory<Response>() {
-            @Override
-            public Response get() {
-                return response;
-            }
-        });
-    }
-
-    public void addResponseFactory(Factory<Response> responseFactory){
-        responseFactories.add(responseFactory);
-    }
-
-    private List<Factory<Response>> responseFactories = new ArrayList<Factory<Response>>();
-    public List<Request> requests = new ArrayList<Request>();
-
-    private int responseIndex = 0;
-
-    @Override
-    public Response run(Request request) {
-        requests.add(request);
-
-        if (responseFactories.size() <= responseIndex)
-            throw new RuntimeException("There aren't more responses configured!");
-
-        Response r = responseFactories.get(responseIndex).get();
-        responseIndex++;
-        return r;
-    }
-}
 
 @RunWith(HierarchicalContextRunner.class)
 public class OnDemandCacheRequesterTest {
