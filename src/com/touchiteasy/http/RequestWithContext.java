@@ -4,29 +4,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestWithContext implements Request {
-    private final Request base;
-    private final Map<String, String> parameters;
+    private final Request requestWithContext;
 
-    public RequestWithContext(Request base, Map<String, String> additionalParameters){
-        this.base = base;
-        this.parameters = addContext(base, additionalParameters);
-    }
+    public RequestWithContext(Request base, final Map<String, String> additionalParameters){
+        final RequestWitDelegatedContext.ContextAdder contextAdder = new RequestWitDelegatedContext.ContextAdder() {
+            @Override
+            public Map<String, String> getParametersWithContext(Map<String, String> baseParameters) {
+                Map<String, String> paramsToSend = new HashMap<String, String>();
+                paramsToSend.putAll(baseParameters);
+                paramsToSend.putAll(additionalParameters);
 
-    private static Map<String, String> addContext(Request base, Map<String, String> additionalParameters) {
-        Map<String, String> paramsToSend = new HashMap<String, String>();
-        paramsToSend.putAll(base.getParameters());
-        paramsToSend.putAll(additionalParameters);
-
-        return paramsToSend;
+                return paramsToSend;
+            }
+        };
+        this.requestWithContext = new RequestWitDelegatedContext(base, contextAdder);
     }
 
     @Override
     public String getResource() {
-        return this.base.getResource();
+        return requestWithContext.getResource();
     }
 
     @Override
     public Map<String, String> getParameters() {
-        return this.parameters;
+        return requestWithContext.getParameters();
     }
 }
