@@ -7,7 +7,7 @@ public class RequestWithContextParameters implements Request {
     private final Request requestWithContext;
 
     public RequestWithContextParameters(Request base, final Map<String, String> additionalParameters){
-        final RequestWitDelegatedContext.ContextAdder contextAdder = new RequestWitDelegatedContext.ContextAdder() {
+        final RequestWithDelegatedContext.ContextAdder contextAdder = new RequestWithDelegatedContext.ContextAdder() {
             @Override
             public Map<String, String> getParametersWithContext(Map<String, String> baseParameters) {
                 Map<String, String> paramsToSend = new HashMap<String, String>();
@@ -17,7 +17,7 @@ public class RequestWithContextParameters implements Request {
                 return paramsToSend;
             }
         };
-        this.requestWithContext = new RequestWitDelegatedContext(base, contextAdder);
+        this.requestWithContext = new RequestWithDelegatedContext(base, contextAdder);
     }
 
     @Override

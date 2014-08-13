@@ -2,7 +2,7 @@ package com.touchiteasy.http;
 
 import java.util.Map;
 
-public class RequestWitDelegatedContext implements Request {
+public class RequestWithDelegatedContext implements Request {
     public static abstract class ContextAdder {
         public String getResourceWithContext(String baseResource){
             return baseResource;
@@ -15,7 +15,7 @@ public class RequestWitDelegatedContext implements Request {
     private final Request baseRequest;
     private final ContextAdder contextAdder;
 
-    public RequestWitDelegatedContext(Request baseRequest, ContextAdder contextAdder) {
+    public RequestWithDelegatedContext(Request baseRequest, ContextAdder contextAdder) {
         this.baseRequest = baseRequest;
         this.contextAdder = contextAdder;
     }

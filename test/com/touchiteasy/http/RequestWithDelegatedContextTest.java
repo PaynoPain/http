@@ -10,7 +10,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class RequestWitDelegatedContextTest {
+public class RequestWithDelegatedContextTest {
     BaseRequest base;
     Request requestWithResourceContext;
 
@@ -22,7 +22,7 @@ public class RequestWitDelegatedContextTest {
                         "::base_key::", "::base_value::"
                 )
         );
-        requestWithResourceContext = new RequestWitDelegatedContext(base, new RequestWitDelegatedContext.ContextAdder() {
+        requestWithResourceContext = new RequestWithDelegatedContext(base, new RequestWithDelegatedContext.ContextAdder() {
             @Override
             public String getResourceWithContext(String baseResource) {
                 return "::context_resource::" + baseResource;
