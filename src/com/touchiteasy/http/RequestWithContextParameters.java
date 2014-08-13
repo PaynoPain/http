@@ -3,10 +3,10 @@ package com.touchiteasy.http;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestWithContext implements Request {
+public class RequestWithContextParameters implements Request {
     private final Request requestWithContext;
 
-    public RequestWithContext(Request base, final Map<String, String> additionalParameters){
+    public RequestWithContextParameters(Request base, final Map<String, String> additionalParameters){
         final RequestWitDelegatedContext.ContextAdder contextAdder = new RequestWitDelegatedContext.ContextAdder() {
             @Override
             public Map<String, String> getParametersWithContext(Map<String, String> baseParameters) {

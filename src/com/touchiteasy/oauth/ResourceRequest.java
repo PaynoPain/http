@@ -2,9 +2,9 @@ package com.touchiteasy.oauth;
 
 import com.touchiteasy.commons.LiteralStringsMap;
 import com.touchiteasy.http.Request;
-import com.touchiteasy.http.RequestWithContext;
+import com.touchiteasy.http.RequestWithContextParameters;
 
-public class ResourceRequest extends RequestWithContext {
+public class ResourceRequest extends RequestWithContextParameters {
     public ResourceRequest(Tokens tokens, Request base) {
         super(
                 base,

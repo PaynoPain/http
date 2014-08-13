@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(HierarchicalContextRunner.class)
-public class RequestWithContextTest {
+public class RequestWithContextParametersTest {
     public class GivenARequestMockWith2Parameters{
         BaseRequest mock;
         @Before
@@ -21,10 +21,10 @@ public class RequestWithContextTest {
             mock = new BaseRequest("url", new LiteralStringsMap("username", "user", "password", "pass"));
         }
         public class WhenAddingNoParametersToTheContext{
-            RequestWithContext paramsMerger;
+            RequestWithContextParameters paramsMerger;
             @Before
             public void setUp(){
-                paramsMerger = new RequestWithContext(mock, new HashMap<String, String>());
+                paramsMerger = new RequestWithContextParameters(mock, new HashMap<String, String>());
             }
             @Test
             public void shouldContainOnlyThe2InitialParameters(){
@@ -33,10 +33,10 @@ public class RequestWithContextTest {
             }
         }
         public class WhenAdding2MoreParameters{
-            RequestWithContext paramsMerger;
+            RequestWithContextParameters paramsMerger;
             @Before
             public void setUp(){
-                paramsMerger = new RequestWithContext(mock,  new LiteralStringsMap("clientId", "client", "clientSecret", "secret"));
+                paramsMerger = new RequestWithContextParameters(mock,  new LiteralStringsMap("clientId", "client", "clientSecret", "secret"));
             }
             @Test
             public void shouldContainThe4Parameters(){
