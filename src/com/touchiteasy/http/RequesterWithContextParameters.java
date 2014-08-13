@@ -2,11 +2,11 @@ package com.touchiteasy.http;
 
 import java.util.Map;
 
-public class RequesterWithContext implements ResourceRequester {
+public class RequesterWithContextParameters implements ResourceRequester {
     private ResourceRequester base;
     private Map<String, String> additionalParameters;
 
-    public RequesterWithContext(ResourceRequester base, Map<String, String> additionalParameters) {
+    public RequesterWithContextParameters(ResourceRequester base, Map<String, String> additionalParameters) {
         this.base = base;
         this.additionalParameters = additionalParameters;
     }

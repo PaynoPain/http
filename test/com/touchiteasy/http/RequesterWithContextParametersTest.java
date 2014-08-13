@@ -1,7 +1,6 @@
 package com.touchiteasy.http;
 
 import com.touchiteasy.commons.LiteralStringsMap;
-import com.touchiteasy.oauth.ResourceRequest;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +13,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(HierarchicalContextRunner.class)
-public class RequesterWithContextTest {
+public class RequesterWithContextParametersTest {
     public class GivenARequestMockWith2Parameters{
         BaseRequest baseRequest;
         RequesterMock baseRequester;
-        RequesterWithContext requesterWithContext;
+        RequesterWithContextParameters requesterWithContextParameters;
 
         @Before
         public void setUp(){
@@ -30,8 +29,8 @@ public class RequesterWithContextTest {
         public class WhenAddingNoParametersToTheContext{
             @Before
             public void setUp(){
-                requesterWithContext = new RequesterWithContext(baseRequester, new HashMap<String, String>());
-                requesterWithContext.run(baseRequest);
+                requesterWithContextParameters = new RequesterWithContextParameters(baseRequester, new HashMap<String, String>());
+                requesterWithContextParameters.run(baseRequest);
             }
 
             @Test
@@ -44,8 +43,8 @@ public class RequesterWithContextTest {
         public class WhenAdding2MoreParameters{
             @Before
             public void setUp(){
-                requesterWithContext = new RequesterWithContext(baseRequester, new LiteralStringsMap("clientId", "client", "clientSecret", "secret"));
-                requesterWithContext.run(baseRequest);
+                requesterWithContextParameters = new RequesterWithContextParameters(baseRequester, new LiteralStringsMap("clientId", "client", "clientSecret", "secret"));
+                requesterWithContextParameters.run(baseRequest);
             }
 
             @Test
