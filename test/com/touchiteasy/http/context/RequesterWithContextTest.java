@@ -4,7 +4,6 @@ import com.touchiteasy.commons.LiteralStringsMap;
 import com.touchiteasy.http.BaseRequest;
 import com.touchiteasy.http.BaseResponse;
 import com.touchiteasy.http.RequesterMock;
-import com.touchiteasy.http.context.RequesterWithContextParameters;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,11 +16,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(HierarchicalContextRunner.class)
-public class RequesterWithContextParametersTest {
+public class RequesterWithContextTest {
     public class GivenARequestMockWith2Parameters{
         BaseRequest baseRequest;
         RequesterMock baseRequester;
-        RequesterWithContextParameters requesterWithContextParameters;
+        RequesterWithContext requesterWithContext;
 
         @Before
         public void setUp(){
@@ -33,8 +32,8 @@ public class RequesterWithContextParametersTest {
         public class WhenAddingNoParametersToTheContext{
             @Before
             public void setUp(){
-                requesterWithContextParameters = new RequesterWithContextParameters(baseRequester, new HashMap<String, String>());
-                requesterWithContextParameters.run(baseRequest);
+                requesterWithContext = new RequesterWithContext(baseRequester, new AdditionalParametersContext(new HashMap<String, String>()));
+                requesterWithContext.run(baseRequest);
             }
 
             @Test
@@ -47,8 +46,8 @@ public class RequesterWithContextParametersTest {
         public class WhenAdding2MoreParameters{
             @Before
             public void setUp(){
-                requesterWithContextParameters = new RequesterWithContextParameters(baseRequester, new LiteralStringsMap("clientId", "client", "clientSecret", "secret"));
-                requesterWithContextParameters.run(baseRequest);
+                requesterWithContext = new RequesterWithContext(baseRequester, new AdditionalParametersContext(new LiteralStringsMap("clientId", "client", "clientSecret", "secret")));
+                requesterWithContext.run(baseRequest);
             }
 
             @Test
