@@ -2,7 +2,7 @@ package com.touchiteasy.http;
 
 import java.util.Collection;
 
-public class ValidStatusCodesValidator implements ResponseValidatingRequester.ResponseValidator {
+public class ValidStatusCodesValidator extends ResponseValidator {
     private final Collection<Integer> validStatusCodes;
 
     public ValidStatusCodesValidator(Collection<Integer> validStatusCodes){

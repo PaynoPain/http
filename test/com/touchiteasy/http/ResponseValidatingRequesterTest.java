@@ -25,7 +25,7 @@ public class ResponseValidatingRequesterTest {
     }
 
     public class GivenAValidatorThatDictatesEveryResponseIsInvalid {
-        private ResponseValidatingRequester.ResponseValidator everythingInvalidator = new ResponseValidatingRequester.ResponseValidator() {
+        private ResponseValidator everythingInvalidator = new ResponseValidator() {
             @Override
             public boolean isValid(Response response) {
                 return false;
@@ -45,18 +45,18 @@ public class ResponseValidatingRequesterTest {
         }
 
         public class WhenRunningARequest {
-            @Test (expected = ResponseValidatingRequester.InvalidResponseException.class)
+            @Test (expected = ResponseValidator.InvalidResponseException.class)
             public void ShouldThrowInvalidResponseException() {
                 requester.run(request);
             }
 
             @Test
             public void TheExceptionsMessageShouldContainTheCauseDescription() {
-                ResponseValidatingRequester.InvalidResponseException exception = null;
+                ResponseValidator.InvalidResponseException exception = null;
 
                 try {
                     requester.run(request);
-                } catch (ResponseValidatingRequester.InvalidResponseException e){
+                } catch (ResponseValidator.InvalidResponseException e){
                     exception = e;
                 }
 
@@ -66,7 +66,7 @@ public class ResponseValidatingRequesterTest {
     }
 
     public class GivenAValidatorThatDictatesEveryResponseIsValid {
-        private ResponseValidatingRequester.ResponseValidator everythingValidator = new ResponseValidatingRequester.ResponseValidator() {
+        private ResponseValidator everythingValidator = new ResponseValidator() {
             @Override
             public boolean isValid(Response response) {
                 return true;
@@ -95,7 +95,7 @@ public class ResponseValidatingRequesterTest {
     }
 
     public class GivenAValidatorThatOnlyAcceptsResponsesWithStatusCode200Or201 {
-        private ResponseValidatingRequester.ResponseValidator validator = new ValidStatusCodesValidator(Arrays.asList(200, 201));
+        private ResponseValidator validator = new ValidStatusCodesValidator(Arrays.asList(200, 201));
 
         public class WhenTheResponseHasStatusCode200 {
             @Before
@@ -133,18 +133,18 @@ public class ResponseValidatingRequesterTest {
                 requester = new ResponseValidatingRequester(mock, validator);
             }
 
-            @Test (expected = ResponseValidatingRequester.InvalidResponseException.class)
+            @Test (expected = ResponseValidator.InvalidResponseException.class)
             public void ShouldThrowInvalidResponseException() {
                 requester.run(request);
             }
 
             @Test
             public void TheExceptionsMessageShouldContainTheCauseDescription() {
-                ResponseValidatingRequester.InvalidResponseException exception = null;
+                ResponseValidator.InvalidResponseException exception = null;
 
                 try {
                     requester.run(request);
-                } catch (ResponseValidatingRequester.InvalidResponseException e){
+                } catch (ResponseValidator.InvalidResponseException e){
                     exception = e;
                 }
 
