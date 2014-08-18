@@ -16,11 +16,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(HierarchicalContextRunner.class)
-public class RequesterWithContextTest {
+public class ContextRequesterTest {
     public class GivenARequestMockWith2Parameters{
         BaseRequest baseRequest;
         RequesterMock baseRequester;
-        RequesterWithContext requesterWithContext;
+        ContextRequester contextRequester;
 
         @Before
         public void setUp(){
@@ -32,8 +32,8 @@ public class RequesterWithContextTest {
         public class WhenAddingNoParametersToTheContext{
             @Before
             public void setUp(){
-                requesterWithContext = new RequesterWithContext(baseRequester, new AdditionalParametersContext(new HashMap<String, String>()));
-                requesterWithContext.run(baseRequest);
+                contextRequester = new ContextRequester(baseRequester, new AdditionalParametersContext(new HashMap<String, String>()));
+                contextRequester.run(baseRequest);
             }
 
             @Test
@@ -46,8 +46,8 @@ public class RequesterWithContextTest {
         public class WhenAdding2MoreParameters{
             @Before
             public void setUp(){
-                requesterWithContext = new RequesterWithContext(baseRequester, new AdditionalParametersContext(new LiteralStringsMap("clientId", "client", "clientSecret", "secret")));
-                requesterWithContext.run(baseRequest);
+                contextRequester = new ContextRequester(baseRequester, new AdditionalParametersContext(new LiteralStringsMap("clientId", "client", "clientSecret", "secret")));
+                contextRequester.run(baseRequest);
             }
 
             @Test
