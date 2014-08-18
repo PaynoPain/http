@@ -26,7 +26,7 @@ public class AdditionalParametersContextTest {
             Request paramsMerger;
             @Before
             public void setUp(){
-                paramsMerger = new RequestWithContext(mock, new AdditionalParametersContext(new HashMap<String, String>()));
+                paramsMerger = new ContextRequest(mock, new AdditionalParametersContext(new HashMap<String, String>()));
             }
             @Test
             public void shouldContainOnlyThe2InitialParameters(){
@@ -38,7 +38,7 @@ public class AdditionalParametersContextTest {
             Request paramsMerger;
             @Before
             public void setUp(){
-                paramsMerger = new RequestWithContext(mock, new AdditionalParametersContext(new LiteralStringsMap("clientId", "client", "clientSecret", "secret")));
+                paramsMerger = new ContextRequest(mock, new AdditionalParametersContext(new LiteralStringsMap("clientId", "client", "clientSecret", "secret")));
             }
             @Test
             public void shouldContainThe4Parameters(){

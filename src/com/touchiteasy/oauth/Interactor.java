@@ -68,7 +68,7 @@ public class Interactor implements ResourceRequester {
     }
 
     private Response runRefreshRequest() {
-        Request refreshRequest = new RefreshTokensRequest(tokens.get(), new ClientContext(client, new BaseRequest(tokensURL)));
+        Request refreshRequest = new RefreshTokensRequest(tokens.get(), new ClientContextRequest(client, new BaseRequest(tokensURL)));
         return oauthRequester.run(refreshRequest);
     }
 
@@ -77,7 +77,7 @@ public class Interactor implements ResourceRequester {
     }
 
     private Response getResponseFromLoginRequest() {
-        Request req = new LoginRequest(user, new ClientContext(client, new BaseRequest(tokensURL)));
+        Request req = new LoginRequest(user, new ClientContextRequest(client, new BaseRequest(tokensURL)));
         return oauthRequester.run(req);
     }
 

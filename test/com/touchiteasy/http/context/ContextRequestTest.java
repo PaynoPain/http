@@ -12,7 +12,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class RequestWithContextTest {
+public class ContextRequestTest {
     BaseRequest base;
     Request requestWithResourceContext;
 
@@ -24,7 +24,7 @@ public class RequestWithContextTest {
                         "::base_key::", "::base_value::"
                 )
         );
-        requestWithResourceContext = new RequestWithContext(base, new Context() {
+        requestWithResourceContext = new ContextRequest(base, new Context() {
             @Override
             public String getResourceWithContext(String baseResource) {
                 return "::context_resource::" + baseResource;

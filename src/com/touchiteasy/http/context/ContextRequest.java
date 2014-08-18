@@ -4,11 +4,11 @@ import com.touchiteasy.http.Request;
 
 import java.util.Map;
 
-public class RequestWithContext implements Request {
+public class ContextRequest implements Request {
     private final Request baseRequest;
     private final Context context;
 
-    public RequestWithContext(Request baseRequest, Context context) {
+    public ContextRequest(Request baseRequest, Context context) {
         this.baseRequest = baseRequest;
         this.context = context;
     }
