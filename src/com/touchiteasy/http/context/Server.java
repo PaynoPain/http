@@ -1,4 +1,4 @@
-package com.touchiteasy.http;
+package com.touchiteasy.http.context;
 
 public class Server {
     public enum Scheme {

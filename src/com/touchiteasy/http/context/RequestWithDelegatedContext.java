@@ -1,17 +1,10 @@
-package com.touchiteasy.http;
+package com.touchiteasy.http.context;
+
+import com.touchiteasy.http.Request;
 
 import java.util.Map;
 
 public class RequestWithDelegatedContext implements Request {
-    public static abstract class ContextAdder {
-        public String getResourceWithContext(String baseResource){
-            return baseResource;
-        }
-        public Map<String, String> getParametersWithContext(Map<String, String> baseParameters){
-            return baseParameters;
-        }
-    }
-
     private final Request baseRequest;
     private final ContextAdder contextAdder;
 

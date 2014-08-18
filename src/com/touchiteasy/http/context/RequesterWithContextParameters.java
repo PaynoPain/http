@@ -1,4 +1,8 @@
-package com.touchiteasy.http;
+package com.touchiteasy.http.context;
+
+import com.touchiteasy.http.Request;
+import com.touchiteasy.http.ResourceRequester;
+import com.touchiteasy.http.Response;
 
 import java.util.Map;
 

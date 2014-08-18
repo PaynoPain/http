@@ -1,6 +1,8 @@
-package com.touchiteasy.http;
+package com.touchiteasy.http.context;
 
 import com.touchiteasy.commons.LiteralStringsMap;
+import com.touchiteasy.http.BaseRequest;
+import com.touchiteasy.http.context.RequestWithContextParameters;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,49 +15,39 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(HierarchicalContextRunner.class)
-public class RequesterWithContextParametersTest {
+public class RequestWithContextParametersTest {
     public class GivenARequestMockWith2Parameters{
-        BaseRequest baseRequest;
-        RequesterMock baseRequester;
-        RequesterWithContextParameters requesterWithContextParameters;
-
+        BaseRequest mock;
         @Before
         public void setUp(){
-            baseRequest = new BaseRequest("url", new LiteralStringsMap("username", "user", "password", "pass"));
-            baseRequester = new RequesterMock();
-            baseRequester.responses.add(new BaseResponse(200, ""));
+            mock = new BaseRequest("url", new LiteralStringsMap("username", "user", "password", "pass"));
         }
-
         public class WhenAddingNoParametersToTheContext{
+            RequestWithContextParameters paramsMerger;
             @Before
             public void setUp(){
-                requesterWithContextParameters = new RequesterWithContextParameters(baseRequester, new HashMap<String, String>());
-                requesterWithContextParameters.run(baseRequest);
+                paramsMerger = new RequestWithContextParameters(mock, new HashMap<String, String>());
             }
-
             @Test
             public void shouldContainOnlyThe2InitialParameters(){
                 Map<String, String> expected = new LiteralStringsMap("username", "user", "password", "pass");
-                assertThat(baseRequester.requests.get(0).getParameters(), is(expected));
+                assertThat(paramsMerger.getParameters(), is(expected));
             }
         }
-
         public class WhenAdding2MoreParameters{
+            RequestWithContextParameters paramsMerger;
             @Before
             public void setUp(){
-                requesterWithContextParameters = new RequesterWithContextParameters(baseRequester, new LiteralStringsMap("clientId", "client", "clientSecret", "secret"));
-                requesterWithContextParameters.run(baseRequest);
+                paramsMerger = new RequestWithContextParameters(mock,  new LiteralStringsMap("clientId", "client", "clientSecret", "secret"));
             }
-
             @Test
             public void shouldContainThe4Parameters(){
                 Map<String, String> expected = new LiteralStringsMap("username", "user", "password", "pass","clientId", "client", "clientSecret", "secret");
-                assertThat(baseRequester.requests.get(0).getParameters(), is(expected));
+                assertThat(paramsMerger.getParameters(), is(expected));
             }
-
             @Test
             public void shouldHaveTheResourceUnchanged(){
-                assertThat(baseRequester.requests.get(0).getResource(), is("url"));
+                assertThat(paramsMerger.getResource(), is("url"));
             }
         }
     }

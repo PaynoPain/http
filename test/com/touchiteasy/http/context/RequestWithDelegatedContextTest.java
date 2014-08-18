@@ -1,6 +1,9 @@
-package com.touchiteasy.http;
+package com.touchiteasy.http.context;
 
 import com.touchiteasy.commons.LiteralStringsMap;
+import com.touchiteasy.http.BaseRequest;
+import com.touchiteasy.http.Request;
+import com.touchiteasy.http.context.RequestWithDelegatedContext;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +25,7 @@ public class RequestWithDelegatedContextTest {
                         "::base_key::", "::base_value::"
                 )
         );
-        requestWithResourceContext = new RequestWithDelegatedContext(base, new RequestWithDelegatedContext.ContextAdder() {
+        requestWithResourceContext = new RequestWithDelegatedContext(base, new ContextAdder() {
             @Override
             public String getResourceWithContext(String baseResource) {
                 return "::context_resource::" + baseResource;

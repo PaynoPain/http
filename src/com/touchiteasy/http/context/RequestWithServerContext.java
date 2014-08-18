@@ -1,4 +1,6 @@
-package com.touchiteasy.http;
+package com.touchiteasy.http.context;
+
+import com.touchiteasy.http.Request;
 
 import java.util.Map;
 
@@ -8,7 +10,7 @@ public class RequestWithServerContext implements Request {
     public RequestWithServerContext(final Request base, final Server server){
         requestWithContext = new RequestWithDelegatedContext(
                 base,
-                new RequestWithDelegatedContext.ContextAdder() {
+                new ContextAdder() {
                     @Override
                     public String getResourceWithContext(String baseResource) {
                         return server.getBaseUri() + "/" + baseResource;

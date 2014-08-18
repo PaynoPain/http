@@ -1,4 +1,6 @@
-package com.touchiteasy.http;
+package com.touchiteasy.http.context;
+
+import com.touchiteasy.http.Request;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +9,7 @@ public class RequestWithContextParameters implements Request {
     private final Request requestWithContext;
 
     public RequestWithContextParameters(Request base, final Map<String, String> additionalParameters){
-        final RequestWithDelegatedContext.ContextAdder contextAdder = new RequestWithDelegatedContext.ContextAdder() {
+        final ContextAdder contextAdder = new ContextAdder() {
             @Override
             public Map<String, String> getParametersWithContext(Map<String, String> baseParameters) {
                 Map<String, String> paramsToSend = new HashMap<String, String>();
