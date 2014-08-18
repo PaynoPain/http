@@ -1,5 +1,6 @@
-package com.touchiteasy.http;
+package com.touchiteasy.http.validation;
 
+import com.touchiteasy.http.*;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import org.junit.Before;
 import org.junit.Test;

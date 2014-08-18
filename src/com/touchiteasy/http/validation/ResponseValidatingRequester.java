@@ -1,4 +1,8 @@
-package com.touchiteasy.http;
+package com.touchiteasy.http.validation;
+
+import com.touchiteasy.http.Request;
+import com.touchiteasy.http.ResourceRequester;
+import com.touchiteasy.http.Response;
 
 public class ResponseValidatingRequester implements ResourceRequester {
     private final ResourceRequester baseRequester;

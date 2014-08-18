@@ -1,4 +1,6 @@
-package com.touchiteasy.http;
+package com.touchiteasy.http.validation;
+
+import com.touchiteasy.http.Response;
 
 import java.util.Collection;
 

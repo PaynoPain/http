@@ -1,4 +1,7 @@
-package com.touchiteasy.http;
+package com.touchiteasy.http.validation;
+
+import com.touchiteasy.http.IdentifiableResponse;
+import com.touchiteasy.http.Response;
 
 public abstract class ResponseValidator {
     public static class InvalidResponseException extends RuntimeException {
