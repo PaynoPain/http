@@ -24,7 +24,7 @@ public class RequestWithContextTest {
                         "::base_key::", "::base_value::"
                 )
         );
-        requestWithResourceContext = new RequestWithContext(base, new ContextAdder() {
+        requestWithResourceContext = new RequestWithContext(base, new Context() {
             @Override
             public String getResourceWithContext(String baseResource) {
                 return "::context_resource::" + baseResource;

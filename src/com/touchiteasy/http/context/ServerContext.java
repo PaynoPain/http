@@ -1,6 +1,6 @@
 package com.touchiteasy.http.context;
 
-public class ServerContext extends ContextAdder {
+public class ServerContext extends Context {
     private final Server server;
 
     public ServerContext(final Server server){

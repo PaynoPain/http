@@ -3,7 +3,7 @@ package com.touchiteasy.http.context;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdditionalParametersContext extends ContextAdder {
+public class AdditionalParametersContext extends Context {
     private final Map<String, String> additionalParameters;
 
     public AdditionalParametersContext(final Map<String, String> additionalParameters){

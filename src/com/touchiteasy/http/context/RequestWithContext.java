@@ -6,20 +6,20 @@ import java.util.Map;
 
 public class RequestWithContext implements Request {
     private final Request baseRequest;
-    private final ContextAdder contextAdder;
+    private final Context context;
 
-    public RequestWithContext(Request baseRequest, ContextAdder contextAdder) {
+    public RequestWithContext(Request baseRequest, Context context) {
         this.baseRequest = baseRequest;
-        this.contextAdder = contextAdder;
+        this.context = context;
     }
 
     @Override
     public String getResource() {
-        return contextAdder.getResourceWithContext(baseRequest.getResource());
+        return context.getResourceWithContext(baseRequest.getResource());
     }
 
     @Override
     public Map<String, String> getParameters() {
-        return contextAdder.getParametersWithContext(baseRequest.getParameters());
+        return context.getParametersWithContext(baseRequest.getParameters());
     }
 }

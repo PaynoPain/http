@@ -6,15 +6,15 @@ import com.touchiteasy.http.Response;
 
 public class RequesterWithContext implements ResourceRequester {
     private final ResourceRequester base;
-    private final ContextAdder contextAdder;
+    private final Context context;
 
-    public RequesterWithContext(ResourceRequester base, ContextAdder contextAdder) {
+    public RequesterWithContext(ResourceRequester base, Context context) {
         this.base = base;
-        this.contextAdder = contextAdder;
+        this.context = context;
     }
 
     @Override
     public Response run(Request request) {
-        return this.base.run(new RequestWithContext(request, contextAdder));
+        return this.base.run(new RequestWithContext(request, context));
     }
 }

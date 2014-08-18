@@ -2,7 +2,7 @@ package com.touchiteasy.http.context;
 
 import java.util.Map;
 
-public abstract class ContextAdder {
+public abstract class Context {
     public String getResourceWithContext(String baseResource){
         return baseResource;
     }
