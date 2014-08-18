@@ -17,6 +17,6 @@ public class RequesterWithContextParameters implements ResourceRequester {
 
     @Override
     public Response run(Request request) {
-        return this.base.run(new RequestWithContextParameters(request, this.additionalParameters));
+        return this.base.run(new RequestWithContext(request, new AdditionalParametersContext(this.additionalParameters)));
     }
 }

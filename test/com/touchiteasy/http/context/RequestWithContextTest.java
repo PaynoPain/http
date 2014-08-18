@@ -3,7 +3,6 @@ package com.touchiteasy.http.context;
 import com.touchiteasy.commons.LiteralStringsMap;
 import com.touchiteasy.http.BaseRequest;
 import com.touchiteasy.http.Request;
-import com.touchiteasy.http.context.RequestWithDelegatedContext;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +12,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class RequestWithDelegatedContextTest {
+public class RequestWithContextTest {
     BaseRequest base;
     Request requestWithResourceContext;
 
@@ -25,7 +24,7 @@ public class RequestWithDelegatedContextTest {
                         "::base_key::", "::base_value::"
                 )
         );
-        requestWithResourceContext = new RequestWithDelegatedContext(base, new ContextAdder() {
+        requestWithResourceContext = new RequestWithContext(base, new ContextAdder() {
             @Override
             public String getResourceWithContext(String baseResource) {
                 return "::context_resource::" + baseResource;

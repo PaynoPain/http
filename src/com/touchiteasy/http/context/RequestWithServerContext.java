@@ -5,10 +5,10 @@ import com.touchiteasy.http.Request;
 import java.util.Map;
 
 public class RequestWithServerContext implements Request {
-    private final RequestWithDelegatedContext requestWithContext;
+    private final RequestWithContext requestWithContext;
 
     public RequestWithServerContext(final Request base, final Server server){
-        requestWithContext = new RequestWithDelegatedContext(
+        requestWithContext = new RequestWithContext(
                 base,
                 new ContextAdder() {
                     @Override

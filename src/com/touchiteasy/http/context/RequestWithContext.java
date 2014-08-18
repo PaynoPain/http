@@ -4,11 +4,11 @@ import com.touchiteasy.http.Request;
 
 import java.util.Map;
 
-public class RequestWithDelegatedContext implements Request {
+public class RequestWithContext implements Request {
     private final Request baseRequest;
     private final ContextAdder contextAdder;
 
-    public RequestWithDelegatedContext(Request baseRequest, ContextAdder contextAdder) {
+    public RequestWithContext(Request baseRequest, ContextAdder contextAdder) {
         this.baseRequest = baseRequest;
         this.contextAdder = contextAdder;
     }

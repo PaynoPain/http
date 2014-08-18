@@ -2,7 +2,7 @@ package com.touchiteasy.http.context;
 
 import com.touchiteasy.commons.LiteralStringsMap;
 import com.touchiteasy.http.BaseRequest;
-import com.touchiteasy.http.context.RequestWithContextParameters;
+import com.touchiteasy.http.Request;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(HierarchicalContextRunner.class)
-public class RequestWithContextParametersTest {
+public class AdditionalParametersContextTest {
     public class GivenARequestMockWith2Parameters{
         BaseRequest mock;
         @Before
@@ -23,10 +23,10 @@ public class RequestWithContextParametersTest {
             mock = new BaseRequest("url", new LiteralStringsMap("username", "user", "password", "pass"));
         }
         public class WhenAddingNoParametersToTheContext{
-            RequestWithContextParameters paramsMerger;
+            Request paramsMerger;
             @Before
             public void setUp(){
-                paramsMerger = new RequestWithContextParameters(mock, new HashMap<String, String>());
+                paramsMerger = new RequestWithContext(mock, new AdditionalParametersContext(new HashMap<String, String>()));
             }
             @Test
             public void shouldContainOnlyThe2InitialParameters(){
@@ -35,10 +35,10 @@ public class RequestWithContextParametersTest {
             }
         }
         public class WhenAdding2MoreParameters{
-            RequestWithContextParameters paramsMerger;
+            Request paramsMerger;
             @Before
             public void setUp(){
-                paramsMerger = new RequestWithContextParameters(mock,  new LiteralStringsMap("clientId", "client", "clientSecret", "secret"));
+                paramsMerger = new RequestWithContext(mock, new AdditionalParametersContext(new LiteralStringsMap("clientId", "client", "clientSecret", "secret")));
             }
             @Test
             public void shouldContainThe4Parameters(){
