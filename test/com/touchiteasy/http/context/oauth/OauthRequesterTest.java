@@ -88,8 +88,8 @@ class TokensStorageWithData implements TokensStorage {
 }
 
 @RunWith(HierarchicalContextRunner.class)
-public class InteractorTest {
-    Interactor interactor;
+public class OauthRequesterTest {
+    OauthRequester oauthRequester;
     Client client;
     User user;
 
@@ -122,7 +122,7 @@ public class InteractorTest {
             public class WhenRunARequest {
                 @Before
                 public void setUp() {
-                    interactor = new Interactor(resourceRequester, resourceRequester, storage, client, user, GET_TOKENS_URL);
+                    oauthRequester = new OauthRequester(resourceRequester, resourceRequester, storage, client, user, GET_TOKENS_URL);
                 }
 
                 public class AndResponseCodeIs200 {
@@ -257,7 +257,7 @@ public class InteractorTest {
             public class WhenRunALoginRequest {
                 @Before
                 public void setUp() {
-                    interactor = new Interactor(resourceRequester, resourceRequester, storage, client, user, GET_TOKENS_URL);
+                    oauthRequester = new OauthRequester(resourceRequester, resourceRequester, storage, client, user, GET_TOKENS_URL);
                 }
 
                 public class AndResponseCodeIs400 {
@@ -361,7 +361,7 @@ public class InteractorTest {
             @Before
             public void setUp() {
                 storage = new TokensStorageWithData();
-                interactor = new Interactor(resourceRequester, postRequester, storage, client, user, GET_TOKENS_URL);
+                oauthRequester = new OauthRequester(resourceRequester, postRequester, storage, client, user, GET_TOKENS_URL);
                 resourceRequester.responses.add(new BaseResponse(401, "need refresh"));
                 postRequester.responses.add(new BaseResponse(200,"{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
                 resourceRequester.responses.add(new BaseResponse(200,"Ok"));
@@ -385,7 +385,7 @@ public class InteractorTest {
             @Before
             public void setUp() {
                 storage = new EmptyTokensStorage();
-                interactor = new Interactor(resourceRequester, postRequester, storage, client, user, GET_TOKENS_URL);
+                oauthRequester = new OauthRequester(resourceRequester, postRequester, storage, client, user, GET_TOKENS_URL);
                 postRequester.responses.add(new BaseResponse(200, "{\"access_token\":\"f820a39359b7a69436b1c1fdad01a6afbad27f38\",\"expires_in\":3600,\"token_type\":\"bearer\",\"scope\":null,\"refresh_token\":\"6b28235f4a23f5a1c2feb1bf7bd5e9c674f3d7a8\"}"));
                 resourceRequester.responses.add(new BaseResponse(200, "ok"));
 
@@ -409,7 +409,7 @@ public class InteractorTest {
             @Before
             public void setUp() {
                 EmptyTokensStorage storage = new EmptyTokensStorage();
-                interactor = new Interactor(resourceRequester, postRequester, storage, client, user, GET_TOKENS_URL);
+                oauthRequester = new OauthRequester(resourceRequester, postRequester, storage, client, user, GET_TOKENS_URL);
             }
 
             public class WithOkResponseFromServer {
@@ -425,7 +425,7 @@ public class InteractorTest {
 
                 @Test
                 public void shouldReturnTrue(){
-                    assertThat(interactor.canLogin(), is(true));
+                    assertThat(oauthRequester.canLogin(), is(true));
                 }
             }
 
@@ -442,13 +442,13 @@ public class InteractorTest {
 
                 @Test
                 public void shouldReturnFalse(){
-                    assertThat(interactor.canLogin(), is(false));
+                    assertThat(oauthRequester.canLogin(), is(false));
                 }
             }
         }
     }
 
     private Response runRequest() {
-        return interactor.run(new BaseRequest("www.touchItEasy.com/getPermission.json"));
+        return oauthRequester.run(new BaseRequest("www.touchItEasy.com/getPermission.json"));
     }
 }

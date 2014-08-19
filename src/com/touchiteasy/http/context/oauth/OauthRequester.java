@@ -2,7 +2,7 @@ package com.touchiteasy.http.context.oauth;
 
 import com.touchiteasy.http.*;
 
-public class Interactor implements ResourceRequester {
+public class OauthRequester implements ResourceRequester {
     private final ResourceRequester oauthRequester;
     private final ResourceRequester resourceRequester;
     private final TokensStorage tokens;
@@ -10,7 +10,7 @@ public class Interactor implements ResourceRequester {
     private final User user;
     private final String tokensURL;
 
-    public Interactor(ResourceRequester resourceRequester, ResourceRequester oauthRequester, TokensStorage storage, Client client, User user, String tokensURL) {
+    public OauthRequester(ResourceRequester resourceRequester, ResourceRequester oauthRequester, TokensStorage storage, Client client, User user, String tokensURL) {
         this.resourceRequester = resourceRequester;
         this.oauthRequester = oauthRequester;
         this.tokens = storage;
