@@ -1,4 +1,4 @@
-package com.touchiteasy.oauth;
+package com.touchiteasy.http.context.oauth;
 
 import org.junit.Before;
 import org.junit.Test;

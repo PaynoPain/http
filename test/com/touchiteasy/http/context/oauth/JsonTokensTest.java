@@ -1,8 +1,7 @@
-package com.touchiteasy.oauth;
+package com.touchiteasy.http.context.oauth;
 
 import com.touchiteasy.http.BaseResponse;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
-import com.touchiteasy.http.Response;
 import org.junit.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;

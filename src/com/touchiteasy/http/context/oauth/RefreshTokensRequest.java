@@ -1,4 +1,4 @@
-package com.touchiteasy.oauth;
+package com.touchiteasy.http.context.oauth;
 
 import com.touchiteasy.commons.LiteralStringsMap;
 import com.touchiteasy.http.Request;

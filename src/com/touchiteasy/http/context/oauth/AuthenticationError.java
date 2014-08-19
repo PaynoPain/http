@@ -1,4 +1,4 @@
-package com.touchiteasy.oauth;
+package com.touchiteasy.http.context.oauth;
 
 public class AuthenticationError extends OauthException {
     AuthenticationError(String message) {
