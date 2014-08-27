@@ -23,13 +23,13 @@ public class JsonObjectUnwrapperTest {
         }
     }
 
-    UnwrappedParserSpy spy;
+    UnwrappedParserSpy unwrappedParser;
     JsonObjectUnwrapper<String> parser;
 
     @Before
     public void setUp() {
-        spy = new UnwrappedParserSpy();
-        parser = new JsonObjectUnwrapper<String>("key", spy);
+        unwrappedParser = new UnwrappedParserSpy();
+        parser = new JsonObjectUnwrapper<String>("key", unwrappedParser);
     }
 
     public class GivenAValidJson {
@@ -41,13 +41,13 @@ public class JsonObjectUnwrapperTest {
         }
 
         @Test
-        public void ShouldAskTheElementParserToParseTheContent() {
-            assertThat(spy.inputsReceived.size(), is(1));
-            assertThat(spy.inputsReceived.get(0), is("::content::"));
+        public void ShouldAskTheUnwrappedParserToParseTheContent() {
+            assertThat(unwrappedParser.inputsReceived.size(), is(1));
+            assertThat(unwrappedParser.inputsReceived.get(0), is("::content::"));
         }
 
         @Test
-        public void shouldContainAllTheElements() {
+        public void ShouldReturnTheParsedContentByTheGivenUnwrappedParser() {
             assertThat(parsedResult, is("::parsed_content::"));
         }
     }
