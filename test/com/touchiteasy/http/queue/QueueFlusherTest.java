@@ -64,4 +64,26 @@ public class QueueFlusherTest {
         assertThat(serverRequester.requests.size(), is(3));
         assertThat(queueStorage.isEmpty(), is(true));
     }
+
+    @Test
+    public void GivenAQueueWithThreeRequests_WhenOneOfThemThrowsException_ShouldStopSendingThem() {
+        final BaseResponse ok = new BaseResponse(200, "ok");
+        serverRequester.addResponse(ok);
+        serverRequester.addResponseFactory(new Factory<Response>() {
+            @Override
+            public Response get() {
+                throw new RuntimeException("Can't communicate with the server!");
+            }
+        });
+        serverRequester.addResponse(ok);
+
+        queueStorage.add(new BaseRequest("::request1::"));
+        queueStorage.add(new BaseRequest("::request2::"));
+        queueStorage.add(new BaseRequest("::request3::"));
+
+        queueFlusher.flush();
+
+        assertThat(serverRequester.requests.size(), is(2));
+        assertThat(serverRequester.requests.get(1).getResource(), is("::request2::"));
+    }
 }
