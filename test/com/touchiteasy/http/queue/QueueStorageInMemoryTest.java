@@ -12,14 +12,16 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNot.not;
 
-public abstract class QueueStorageContract {
-    public abstract FifoStorage<Request> createInstance();
+public class QueueStorageInMemoryTest {
+    public QueueStorageInMemory<Request> createInstance() {
+        return new QueueStorageInMemory<Request>();
+    }
 
     private Request createElement(String resource) {
         return new IdentifiableRequest(new BaseRequest(resource));
     }
 
-    FifoStorage<Request> storage;
+    QueueStorageInMemory<Request> storage;
 
     @Before
     public void setUp(){
@@ -33,12 +35,12 @@ public abstract class QueueStorageContract {
 
     @Test(expected = NoSuchElementException.class)
     public void WithNoData_WhenRemoving_ShouldTrowException(){
-        storage.removeFirst();
+        storage.dequeue();
     }
 
     @Test(expected = NoSuchElementException.class)
     public void WithNoData_WhenGetting_ShouldTrowException(){
-        storage.getFirst();
+        storage.peek();
     }
 
     @Test
@@ -51,7 +53,7 @@ public abstract class QueueStorageContract {
     @Test
     public void WithAMovement_AndThenRemovedIt_ShouldBeEmpty(){
         storage.add(createElement("::resource::"));
-        storage.removeFirst();
+        storage.dequeue();
 
         assertThat(storage.isEmpty(), is(true));
     }
@@ -62,7 +64,7 @@ public abstract class QueueStorageContract {
 
         storage.add(element);
 
-        assertThat(storage.getFirst(), is(element));
+        assertThat(storage.peek(), is(element));
     }
 
 
@@ -73,10 +75,10 @@ public abstract class QueueStorageContract {
 
         storage.add(element1);
         storage.add(element2);
-        storage.removeFirst();
+        storage.dequeue();
 
-        assertThat(storage.getFirst(), is(not(element1)));
-        assertThat(storage.getFirst(), is(element2));
+        assertThat(storage.peek(), is(not(element1)));
+        assertThat(storage.peek(), is(element2));
     }
 
     @Test
@@ -86,7 +88,7 @@ public abstract class QueueStorageContract {
         }
 
         for (int i = 0; i < 9; i++){
-            storage.removeFirst();
+            storage.dequeue();
         }
 
         assertThat(storage.isEmpty(), is(false));
