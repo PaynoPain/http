@@ -45,6 +45,7 @@ public class QueueFlusherTest {
         });
         queueStorage.add(new BaseRequest("::request1::"));
         queueFlusher.flush();
+        assertThat(serverRequester.requests.size(), is(1));
         assertThat(queueStorage.isEmpty(), is(false));
     }
 
