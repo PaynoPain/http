@@ -33,26 +33,26 @@ public class RequesterAction<Input, Output> implements Function<Input, Output>{
         }
     }
 
-    private class ParserFunction implements Function<Response, Output> {
-        private final ResponseParser<Output> responseParser;
+    private class InterpreterFunction implements Function<Response, Output> {
+        private final ResponseInterpreter<Output> responseInterpreter;
 
-        public ParserFunction(ResponseParser<Output> responseParser){
-            this.responseParser = responseParser;
+        public InterpreterFunction(ResponseInterpreter<Output> responseInterpreter){
+            this.responseInterpreter = responseInterpreter;
         }
 
         @Override
         public Output apply(Response response) throws RuntimeException {
-            return responseParser.parse(response);
+            return responseInterpreter.interpret(response);
         }
     }
 
     private final FunctionAdapter<Input, Output, Request, Response> adapter;
 
-    public RequesterAction(final ResourceRequester requester, final RequestComposer<Input> inputConverter, final ResponseParser<Output> outputConverter) {
+    public RequesterAction(final ResourceRequester requester, final RequestComposer<Input> inputConverter, final ResponseInterpreter<Output> outputConverter) {
         adapter = new FunctionAdapter<Input, Output, Request, Response>(
                 new ResourceRequesterFunction(requester),
                 new ComposerFunction(inputConverter),
-                new ParserFunction(outputConverter)
+                new InterpreterFunction(outputConverter)
         );
     }
 
