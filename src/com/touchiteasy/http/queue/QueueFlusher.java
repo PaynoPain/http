@@ -13,7 +13,9 @@ public class QueueFlusher {
     }
 
     public void flush() {
-        if (!queue.isEmpty())
+        if (!queue.isEmpty()) {
             requester.run(queue.peek());
+            queue.dequeue();
+        }
     }
 }

@@ -29,10 +29,11 @@ public class QueueFlusherTest {
     }
 
     @Test
-    public void GivenAnQueueWithOneRequest_ShouldSendItToTheServer() {
+    public void GivenAnQueueWithOneRequest_ShouldSendItToTheServer_AndDequeueIt() {
         serverRequester.addResponse(new BaseResponse(200, "ok"));
         queueStorage.add(new BaseRequest("::request1::"));
         queueFlusher.flush();
         assertThat(serverRequester.requests.size(), is(1));
+        assertThat(queueStorage.isEmpty(), is(true));
     }
 }
