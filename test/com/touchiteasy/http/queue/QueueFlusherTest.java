@@ -1,9 +1,7 @@
 package com.touchiteasy.http.queue;
 
-import com.touchiteasy.http.BaseRequest;
-import com.touchiteasy.http.BaseResponse;
-import com.touchiteasy.http.Request;
-import com.touchiteasy.http.ServerMock;
+import com.touchiteasy.commons.Factory;
+import com.touchiteasy.http.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,5 +33,18 @@ public class QueueFlusherTest {
         queueFlusher.flush();
         assertThat(serverRequester.requests.size(), is(1));
         assertThat(queueStorage.isEmpty(), is(true));
+    }
+
+    @Test
+    public void GivenARequestersException_ShouldNotDequeueTheElement() {
+        serverRequester.addResponseFactory(new Factory<Response>() {
+            @Override
+            public Response get() {
+                throw new RuntimeException("Can't communicate with the server!");
+            }
+        });
+        queueStorage.add(new BaseRequest("::request1::"));
+        queueFlusher.flush();
+        assertThat(queueStorage.isEmpty(), is(false));
     }
 }
