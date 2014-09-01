@@ -13,7 +13,7 @@ public abstract class ResponseValidator {
     protected abstract boolean isValid(Response response);
     protected abstract String getCauseDescription();
 
-    public void validate(Response response) {
+    public void validate(Response response) throws InvalidResponseException {
         if (!isValid(response))
             throw new InvalidResponseException(String.format(
                     "The following response is invalid because %s.\n%s",
