@@ -47,4 +47,21 @@ public class QueueFlusherTest {
         queueFlusher.flush();
         assertThat(queueStorage.isEmpty(), is(false));
     }
+
+    @Test
+    public void GivenAQueueWithThreeRequests_ShouldSendThemAll() {
+        final BaseResponse ok = new BaseResponse(200, "ok");
+        serverRequester.addResponse(ok);
+        serverRequester.addResponse(ok);
+        serverRequester.addResponse(ok);
+
+        queueStorage.add(new BaseRequest("::request1::"));
+        queueStorage.add(new BaseRequest("::request2::"));
+        queueStorage.add(new BaseRequest("::request3::"));
+
+        queueFlusher.flush();
+
+        assertThat(serverRequester.requests.size(), is(3));
+        assertThat(queueStorage.isEmpty(), is(true));
+    }
 }
