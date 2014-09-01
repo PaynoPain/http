@@ -5,6 +5,7 @@ import java.util.LinkedList;
 public class QueueStorageInMemory<T> implements QueueStorage<T> {
     private LinkedList<T> elements = new LinkedList<T>();
 
+    @Override
     public void add(T element) {
         elements.add(element);
     }
