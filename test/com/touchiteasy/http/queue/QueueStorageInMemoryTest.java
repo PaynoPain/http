@@ -33,12 +33,12 @@ public class QueueStorageInMemoryTest {
         assertThat(storage.isEmpty(), is(true));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test(expected = RuntimeException.class)
     public void WithNoData_WhenRemoving_ShouldTrowException(){
         storage.dequeue();
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test(expected = RuntimeException.class)
     public void WithNoData_WhenGetting_ShouldTrowException(){
         storage.peek();
     }
