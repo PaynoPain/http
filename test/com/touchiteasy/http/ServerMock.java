@@ -31,8 +31,8 @@ public class ServerMock implements ResourceRequester {
         if (responseFactories.size() <= responseIndex)
             throw new RuntimeException("There aren't more responses configured!");
 
-        Response r = responseFactories.get(responseIndex).get();
+        final Factory<Response> responseFactory = responseFactories.get(responseIndex);
         responseIndex++;
-        return r;
+        return responseFactory.get();
     }
 }
