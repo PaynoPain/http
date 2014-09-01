@@ -12,7 +12,7 @@ public class QueueFlusher {
         this.queue = queue;
     }
 
-    public void flush() {
+    public synchronized void flush() {
         try {
             while (!queue.isEmpty()) {
                 requester.run(queue.peek());
