@@ -51,6 +51,26 @@ public class QueueFlusherTest {
     }
 
     @Test
+    public void GivenAQueueWithOneRequest_AndTheServerThrowsExceptionOnlyTheFirstTime_FlushingTwoTimesShouldEmptyTheQueue() {
+        serverRequester.addResponseFactory(new Factory<Response>() {
+            @Override
+            public Response get() {
+                throw new RuntimeException("Can't communicate with the server!");
+            }
+        });
+        serverRequester.addResponse(new BaseResponse(200, "ok"));
+
+        queueStorage.add(new BaseRequest("::request1::"));
+
+        queueFlusher.flush();
+        queueFlusher.flush();
+
+        assertThat(serverRequester.requests.size(), is(2));
+        assertThat(serverRequester.requests.get(1).getResource(), is("::request1::"));
+        assertThat(queueStorage.isEmpty(), is(true));
+    }
+
+    @Test
     public void GivenAQueueWithThreeRequests_ShouldSendThemAll() {
         final BaseResponse ok = new BaseResponse(200, "ok");
         serverRequester.addResponse(ok);
