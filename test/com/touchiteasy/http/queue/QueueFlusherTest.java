@@ -29,7 +29,7 @@ public class QueueFlusherTest {
     }
 
     @Test
-    public void GivenAnQueueWithOneRequest_ShouldSendItToTheServer_AndDequeueIt() {
+    public void GivenAQueueWithOneRequest_ShouldSendItToTheServer_AndDequeueIt() {
         serverRequester.addResponse(new BaseResponse(200, "ok"));
         queueStorage.add(new BaseRequest("::request1::"));
         queueFlusher.flush();
