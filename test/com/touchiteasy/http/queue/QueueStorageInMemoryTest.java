@@ -44,14 +44,14 @@ public class QueueStorageInMemoryTest {
     }
 
     @Test
-    public void WithAMovement_ShouldNotBeEmpty(){
+    public void WithAnElement_ShouldNotBeEmpty(){
         storage.add(createElement("::resource::"));
 
         assertThat(storage.isEmpty(), is(false));
     }
 
     @Test
-    public void WithAMovement_AndThenRemovedIt_ShouldBeEmpty(){
+    public void WithAnElement_AndThenRemovedIt_ShouldBeEmpty(){
         storage.add(createElement("::resource::"));
         storage.dequeue();
 
@@ -59,7 +59,7 @@ public class QueueStorageInMemoryTest {
     }
 
     @Test
-    public void WithAMovement_ShouldReturnThatMovement(){
+    public void WithAnElement_ShouldReturnThatElement(){
         Request element = createElement("::resource::");
 
         storage.add(element);
@@ -69,7 +69,7 @@ public class QueueStorageInMemoryTest {
 
 
     @Test
-    public void WithTwoMovements_AndThenRemovedTheFirst_ShouldReturnTheSecond(){
+    public void WithTwoElements_AndThenRemovedTheFirst_ShouldReturnTheSecond(){
         Request element1 = createElement("::resource1::");
         Request element2 = createElement("::resource2::");
 
@@ -82,7 +82,7 @@ public class QueueStorageInMemoryTest {
     }
 
     @Test
-    public void WithSomeMovements_AndRemovingAllButOne_ShouldNotBeEmpty(){
+    public void WithSomeElements_AndRemovingAllButOne_ShouldNotBeEmpty(){
         for (int i = 0; i < 10; i++){
             storage.add(createElement("::resource" + i + "::"));
         }
