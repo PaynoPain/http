@@ -25,4 +25,8 @@ public class QueueFlusher {
             if (!failure) queue.dequeue();
         }
     }
+
+    public boolean isEmpty() {
+        return queue.isEmpty();
+    }
 }

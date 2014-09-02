@@ -33,7 +33,7 @@ public class QueueFlusherTest {
         queueFlusher.flush();
         assertThat(serverRequester.requests.size(), is(1));
         assertThat(serverRequester.requests.get(0).getResource(), is("::request1::"));
-        assertThat(queueStorage.isEmpty(), is(true));
+        assertThat(queueFlusher.isEmpty(), is(true));
     }
 
     @Test
@@ -48,7 +48,7 @@ public class QueueFlusherTest {
         queueFlusher.flush();
         assertThat(serverRequester.requests.size(), is(1));
         assertThat(serverRequester.requests.get(0).getResource(), is("::request1::"));
-        assertThat(queueStorage.isEmpty(), is(false));
+        assertThat(queueFlusher.isEmpty(), is(false));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class QueueFlusherTest {
 
         assertThat(serverRequester.requests.size(), is(2));
         assertThat(serverRequester.requests.get(1).getResource(), is("::request1::"));
-        assertThat(queueStorage.isEmpty(), is(true));
+        assertThat(queueFlusher.isEmpty(), is(true));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class QueueFlusherTest {
         queueFlusher.flush();
 
         assertThat(serverRequester.requests.size(), is(3));
-        assertThat(queueStorage.isEmpty(), is(true));
+        assertThat(queueFlusher.isEmpty(), is(true));
     }
 
     @Test
