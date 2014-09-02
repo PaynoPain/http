@@ -19,10 +19,10 @@ public class QueueFlusher {
             final Request currentRequest = queue.peek();
             try {
                 requester.run(currentRequest);
-                queue.dequeue();
             } catch (RuntimeException e){
                 failure = true;
             }
+            if (!failure) queue.dequeue();
         }
     }
 }

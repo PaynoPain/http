@@ -135,4 +135,33 @@ public class QueueFlusherTest {
         queueFlusher = new QueueFlusher(serverRequester, new FailingPeekStorage());
         queueFlusher.flush();
     }
+
+    private static class FailingDequeueStorage implements QueueStorage<Request>{
+        public static class StorageFailure extends RuntimeException {}
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public void add(Request request) {}
+
+        @Override
+        public Request peek() {
+            return new BaseRequest("");
+        }
+
+        @Override
+        public void dequeue() {
+            throw new StorageFailure();
+        }
+    }
+
+    @Test(expected = FailingDequeueStorage.StorageFailure.class)
+    public void GivenADequeueFailure_ShouldBubbleUp() {
+        serverRequester.addResponse(new BaseResponse(200, "ok"));
+        queueFlusher = new QueueFlusher(serverRequester, new FailingDequeueStorage());
+        queueFlusher.flush();
+    }
 }
