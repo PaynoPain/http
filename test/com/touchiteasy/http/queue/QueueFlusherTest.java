@@ -109,4 +109,30 @@ public class QueueFlusherTest {
         assertThat(serverRequester.requests.size(), is(2));
         assertThat(serverRequester.requests.get(1).getResource(), is("::request2::"));
     }
+
+    private static class FailingPeekStorage implements QueueStorage<Request>{
+        public static class StorageFailure extends RuntimeException {}
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public void add(Request request) {}
+
+        @Override
+        public Request peek() {
+            throw new StorageFailure();
+        }
+
+        @Override
+        public void dequeue() {}
+    }
+
+    @Test(expected = FailingPeekStorage.StorageFailure.class)
+    public void GivenAPeekFailure_ShouldBubbleUp() {
+        queueFlusher = new QueueFlusher(serverRequester, new FailingPeekStorage());
+        queueFlusher.flush();
+    }
 }

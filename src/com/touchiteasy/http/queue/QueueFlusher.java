@@ -13,11 +13,16 @@ public class QueueFlusher {
     }
 
     public synchronized void flush() {
-        try {
-            while (!queue.isEmpty()) {
-                requester.run(queue.peek());
+        boolean failure = false;
+
+        while (!queue.isEmpty() && !failure) {
+            final Request currentRequest = queue.peek();
+            try {
+                requester.run(currentRequest);
                 queue.dequeue();
+            } catch (RuntimeException e){
+                failure = true;
             }
-        } catch (RuntimeException ignored){}
+        }
     }
 }
