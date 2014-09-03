@@ -11,7 +11,18 @@ public class FlushableCollection implements Flushable {
 
     @Override
     public boolean canFlush() {
-        return !elements.isEmpty() && elements.get(0).canFlush();
+        return !elements.isEmpty() && anyCanFlush();
+    }
+
+    private boolean anyCanFlush() {
+        boolean canFlush = false;
+
+        for (Flushable flushable : elements){
+            canFlush = flushable.canFlush();
+            if (canFlush) break;
+        }
+
+        return canFlush;
     }
 
     @Override

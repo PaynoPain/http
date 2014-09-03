@@ -30,7 +30,7 @@ public class FlushableCollectionTest {
     }
 
     @Test
-    public void GivenACollectionWithOneElement_SameAsTheElementAlone() {
+    public void GivenACollectionWithOneElement_CanFlushIfTheElementCanFlush() {
         final FlushableSpy element = new FlushableSpy();
         final FlushableCollection collection = new FlushableCollection(Arrays.<Flushable>asList(element));
 
@@ -39,5 +39,23 @@ public class FlushableCollectionTest {
 
         element.canFlush = false;
         assertThat(collection.canFlush(), is(false));
+    }
+
+    @Test
+    public void GivenACollectionWithThreeElements_CanFlushIfOneOfThemCanFlush() {
+        final FlushableSpy element1 = new FlushableSpy();
+        final FlushableSpy element2 = new FlushableSpy();
+        final FlushableSpy element3 = new FlushableSpy();
+        final FlushableCollection collection = new FlushableCollection(Arrays.<Flushable>asList(element1, element2, element3));
+
+        element1.canFlush = false;
+        element2.canFlush = false;
+        element3.canFlush = false;
+        assertThat(collection.canFlush(), is(false));
+
+        element1.canFlush = false;
+        element2.canFlush = false;
+        element3.canFlush = true;
+        assertThat(collection.canFlush(), is(true));
     }
 }
