@@ -1,9 +1,10 @@
 package com.touchiteasy.http.queue;
 
-import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class QueueStorageInMemory<T> implements QueueStorage<T> {
-    private LinkedList<T> elements = new LinkedList<T>();
+    private Queue<T> elements = new ConcurrentLinkedQueue<T>();
 
     @Override
     public void add(T element) {
