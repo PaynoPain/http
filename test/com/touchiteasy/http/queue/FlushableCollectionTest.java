@@ -29,6 +29,12 @@ public class FlushableCollectionTest {
         assertThat(collection.canFlush(), is(false));
     }
 
+    @Test (expected = RuntimeException.class)
+    public void GivenAnEmptyCollection_WhenFlushing_ThrowsException() {
+        final FlushableCollection collection = new FlushableCollection(Arrays.<Flushable>asList());
+        collection.flush();
+    }
+
     @Test
     public void GivenACollectionWithOneElement_CanFlushIfTheElementCanFlush() {
         final FlushableSpy element = new FlushableSpy();

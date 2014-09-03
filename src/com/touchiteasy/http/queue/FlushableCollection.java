@@ -27,6 +27,6 @@ public class FlushableCollection implements Flushable {
 
     @Override
     public void flush() {
-
+        throw new RuntimeException("Cant be flushed!");
     }
 }
