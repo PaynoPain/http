@@ -52,9 +52,19 @@ public class FlushableCollectionTest {
         final FlushableSpy element = new FlushableSpy();
         final FlushableCollection collection = new FlushableCollection(Arrays.<Flushable>asList(element));
 
+        element.canFlush = true;
         collection.flush();
 
         assertThat(element.flushCount, is(1));
+    }
+
+    @Test (expected = RuntimeException.class)
+    public void GivenACollectionWithOneElementThatCantFlush_WhenFlushing_ShouldThrowException() {
+        final FlushableSpy element = new FlushableSpy();
+        final FlushableCollection collection = new FlushableCollection(Arrays.<Flushable>asList(element));
+
+        element.canFlush = false;
+        collection.flush();
     }
 
     @Test

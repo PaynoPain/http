@@ -27,7 +27,7 @@ public class FlushableCollection implements Flushable {
 
     @Override
     public void flush() {
-        if (elements.isEmpty())
+        if (!canFlush())
             throw new RuntimeException("Cant be flushed!");
 
         elements.get(0).flush();
