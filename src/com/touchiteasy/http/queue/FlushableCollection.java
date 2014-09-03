@@ -30,6 +30,8 @@ public class FlushableCollection implements Flushable {
         if (!canFlush())
             throw new RuntimeException("Cant be flushed!");
 
-        elements.get(0).flush();
+        for (Flushable flushable : elements)
+            if (flushable.canFlush())
+                flushable.flush();
     }
 }

@@ -84,4 +84,21 @@ public class FlushableCollectionTest {
         element3.canFlush = true;
         assertThat(collection.canFlush(), is(true));
     }
+
+    @Test
+    public void GivenACollectionWithThreeElements_WhenFlushing_ShouldFlushOnlyTheOneThatCanFlush() {
+        final FlushableSpy element1 = new FlushableSpy();
+        final FlushableSpy element2 = new FlushableSpy();
+        final FlushableSpy element3 = new FlushableSpy();
+        final FlushableCollection collection = new FlushableCollection(Arrays.<Flushable>asList(element1, element2, element3));
+
+        element1.canFlush = false;
+        element2.canFlush = true;
+        element3.canFlush = true;
+        collection.flush();
+
+        assertThat(element1.flushCount, is(0));
+        assertThat(element2.flushCount, is(1));
+        assertThat(element3.flushCount, is(1));
+    }
 }
