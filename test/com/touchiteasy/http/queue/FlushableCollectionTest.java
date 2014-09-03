@@ -48,6 +48,16 @@ public class FlushableCollectionTest {
     }
 
     @Test
+    public void GivenACollectionWithOneElementThatCanFlush_FlushShouldSendHimToFlush() {
+        final FlushableSpy element = new FlushableSpy();
+        final FlushableCollection collection = new FlushableCollection(Arrays.<Flushable>asList(element));
+
+        collection.flush();
+
+        assertThat(element.flushCount, is(1));
+    }
+
+    @Test
     public void GivenACollectionWithThreeElements_CanFlushIfOneOfThemCanFlush() {
         final FlushableSpy element1 = new FlushableSpy();
         final FlushableSpy element2 = new FlushableSpy();
