@@ -3,7 +3,7 @@ package com.touchiteasy.http.queue;
 import com.touchiteasy.http.Request;
 import com.touchiteasy.http.ResourceRequester;
 
-public class QueueFlusher {
+public class QueueFlusher implements Flushable {
     private final ResourceRequester requester;
     private final QueueStorage<Request> queue;
 
@@ -12,6 +12,7 @@ public class QueueFlusher {
         this.queue = queue;
     }
 
+    @Override
     public synchronized void flush() {
         boolean failure = false;
 
@@ -26,7 +27,8 @@ public class QueueFlusher {
         }
     }
 
-    public boolean isEmpty() {
-        return queue.isEmpty();
+    @Override
+    public boolean canFlush() {
+        return !queue.isEmpty();
     }
 }
