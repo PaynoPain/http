@@ -12,13 +12,13 @@ import java.io.IOException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class CacheStorageInDirectoryTest extends CacheStorageContract {
+public class MapStorageInDirectoryTest extends CacheStorageContract {
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Override
-    public CacheStorage createCacheStorage() {
-        return new CacheStorageInDirectory(testFolder.getRoot());
+    public MapStorage createCacheStorage() {
+        return new MapStorageInDirectory(testFolder.getRoot());
     }
 
     @Test

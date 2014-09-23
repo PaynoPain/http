@@ -28,7 +28,7 @@ public class OnDemandCacheRequesterTest {
         timeGateway = new MutableFactory<Date>(null);
         cacheDuration = 100L;
         timeToRefresh = 200L;
-        cache = new OnDemandCacheRequester(server, new CacheStorageInMemory(), timeGateway, cacheDuration, timeToRefresh);
+        cache = new OnDemandCacheRequester(server, new MapStorageInMemory(), timeGateway, cacheDuration, timeToRefresh);
     }
 
     public class IfTheServerIsUnavailable {

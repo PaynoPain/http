@@ -6,7 +6,7 @@ import com.touchiteasy.http.Request;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CacheStorageInMemory implements CacheStorage {
+public class MapStorageInMemory implements MapStorage<Request, CacheEntry> {
     private Map<Request, CacheEntry> cache = new HashMap<Request, CacheEntry>();
 
     public CacheEntry read(Request req){

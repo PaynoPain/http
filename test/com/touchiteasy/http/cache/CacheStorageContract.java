@@ -13,9 +13,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public abstract class CacheStorageContract {
-    public abstract CacheStorage createCacheStorage();
+    public abstract MapStorage<Request, CacheEntry> createCacheStorage();
 
-    protected CacheStorage storage;
+    protected MapStorage<Request, CacheEntry> storage;
     protected Request request;
     protected CacheEntry entry;
 

@@ -7,10 +7,10 @@ import com.touchiteasy.http.Request;
 import java.io.*;
 import java.util.Date;
 
-public class CacheStorageInDirectory implements CacheStorage {
+public class MapStorageInDirectory implements MapStorage<Request, CacheEntry> {
     private File baseDirectory;
 
-    public CacheStorageInDirectory(File baseDirectory){
+    public MapStorageInDirectory(File baseDirectory){
         this.baseDirectory = baseDirectory;
     }
 

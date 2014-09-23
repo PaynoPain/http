@@ -9,13 +9,13 @@ import java.util.Date;
 
 public class OnDemandCacheRequester implements ResourceRequester {
     private final ResourceRequester requester;
-    private final CacheStorage cache;
+    private final MapStorage<Request, CacheEntry> cache;
     private final Factory<Date> timeGateway;
     private final Long cacheDurationInMilliseconds;
     private final Long timeToRefreshInMilliseconds;
 
     public OnDemandCacheRequester(
-            ResourceRequester resourceRequester, CacheStorage storage, Factory<Date> timeGateway,
+            ResourceRequester resourceRequester, MapStorage<Request, CacheEntry> storage, Factory<Date> timeGateway,
             Long cacheDurationInMilliseconds, Long timeToRefreshAfterCacheExpirationInMilliseconds) {
         requester = resourceRequester;
         cache = storage;
