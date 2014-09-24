@@ -4,17 +4,17 @@ import com.touchiteasy.http.IdentifiableResponse;
 import com.touchiteasy.http.Response;
 
 public abstract class ResponseValidator {
-    protected static class ValidationResult {
-        protected static ValidationResult invalid(String causeDescription) {
+    public static class ValidationResult {
+        public static ValidationResult invalid(String causeDescription) {
             return new ValidationResult(false, causeDescription);
         }
 
-        protected static ValidationResult valid() {
+        public static ValidationResult valid() {
             return new ValidationResult(true, null);
         }
 
-        public final boolean isValid;
-        public final String causeDescription;
+        private final boolean isValid;
+        private final String causeDescription;
 
         private ValidationResult(boolean isValid, String causeDescription){
             this.isValid = isValid;

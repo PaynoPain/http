@@ -47,13 +47,14 @@ public class OnDemandCachedQueryTest {
         };
         final ResponseValidator cacheValidator = new ResponseValidator() {
             @Override
-            protected boolean isValid(Response response) {
-                return response.getStatusCode() == 200 && !response.getBody().equals("::error::");
-            }
+            protected ValidationResult analyse(Response response) {
+                if (response.getStatusCode() != 200)
+                    return ValidationResult.invalid("The response status code should be 200 (OK).");
 
-            @Override
-            protected String getCauseDescription() {
-                return "The response should be 200 (OK) and not contain an error in the body.";
+                if (response.getBody().equals("::error::"))
+                    return ValidationResult.invalid("The response body should not contain an error.");
+
+                return ValidationResult.valid();
             }
         };
         query = new OnDemandCachedQuery<String, String>(
