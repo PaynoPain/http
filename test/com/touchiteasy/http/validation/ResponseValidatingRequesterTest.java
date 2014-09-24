@@ -28,13 +28,8 @@ public class ResponseValidatingRequesterTest {
     public class GivenAValidatorThatDictatesEveryResponseIsInvalid {
         private ResponseValidator everythingInvalidator = new ResponseValidator() {
             @Override
-            public boolean isValid(Response response) {
-                return false;
-            }
-
-            @Override
-            public String getCauseDescription() {
-                return "everything is invalid";
+            protected ValidationResult analyse(Response response) {
+                return ValidationResult.invalid("everything is invalid");
             }
         };
 
@@ -61,7 +56,7 @@ public class ResponseValidatingRequesterTest {
                     exception = e;
                 }
 
-                assertThat(exception.getMessage(), containsString(everythingInvalidator.getCauseDescription()));
+                assertThat(exception.getMessage(), containsString("everything is invalid"));
             }
         }
     }
@@ -69,13 +64,8 @@ public class ResponseValidatingRequesterTest {
     public class GivenAValidatorThatDictatesEveryResponseIsValid {
         private ResponseValidator everythingValidator = new ResponseValidator() {
             @Override
-            public boolean isValid(Response response) {
-                return true;
-            }
-
-            @Override
-            public String getCauseDescription() {
-                return "everything is valid";
+            protected ValidationResult analyse(Response response) {
+                return ValidationResult.valid();
             }
         };
 
