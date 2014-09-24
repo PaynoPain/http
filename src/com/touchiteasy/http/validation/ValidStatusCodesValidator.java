@@ -12,12 +12,11 @@ public class ValidStatusCodesValidator extends ResponseValidator {
     }
 
     @Override
-    public boolean isValid(Response response) {
-        return validStatusCodes.contains(response.getStatusCode());
-    }
-
-    @Override
-    public String getCauseDescription() {
-        return String.format("the only valid status codes are %s", validStatusCodes.toString());
+    protected ValidationResult analyse(Response response) {
+        if (validStatusCodes.contains(response.getStatusCode()))
+            return ValidationResult.valid();
+        else
+            return ValidationResult.invalid(
+                    String.format("the only valid status codes are %s", validStatusCodes.toString()));
     }
 }
