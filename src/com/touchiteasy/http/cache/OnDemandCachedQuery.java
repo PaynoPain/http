@@ -16,7 +16,8 @@ public class OnDemandCachedQuery<Input, Output> extends RequesterAction<Input, O
             final ResourceRequester requester, final MapStorage<Request, CacheEntry> storage,
             final ResponseValidator cacheValidator,
             final RequestComposer<Input> inputConverter, final ResponseInterpreter<Output> outputConverter,
-            final Factory<Date> timeGateway, final Long cacheDuration, final Long timeToRefresh) {
+            final Factory<Date> timeGateway,
+            final Long cacheDurationInMilliseconds, final Long timeToRefreshAfterCacheExpirationInMilliseconds) {
         super(
                 new OnDemandCacheRequester(
                         new ResponseValidatingRequester(
@@ -25,8 +26,8 @@ public class OnDemandCachedQuery<Input, Output> extends RequesterAction<Input, O
                         ),
                         storage,
                         timeGateway,
-                        cacheDuration,
-                        timeToRefresh
+                        cacheDurationInMilliseconds,
+                        timeToRefreshAfterCacheExpirationInMilliseconds
                 ),
                 inputConverter,
                 outputConverter
