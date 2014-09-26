@@ -27,18 +27,11 @@ public class ResponseValidatingRequesterTest {
     }
 
     public class GivenAValidatorThatDictatesEveryResponseIsInvalid {
-        private ResponseValidator everythingInvalidator = new ResponseValidator() {
-            @Override
-            public Collection<InvalidationCause> analyse(Response response) {
-                return Arrays.asList(new InvalidationCause("everything is invalid"));
-            }
-        };
-
         @Before
         public void setUp() {
             response = new BaseResponse(200, "body");
             mock.responses.add(response);
-            requester = new ResponseValidatingRequester(mock, everythingInvalidator);
+            requester = new ResponseValidatingRequester(mock, new EverythingInvalidatorStub());
         }
 
         public class WhenRunningARequest {
@@ -63,22 +56,11 @@ public class ResponseValidatingRequesterTest {
     }
 
     public class GivenAValidatorThatDictatesEveryResponseIsInvalidBecauseOfThreeCauses {
-        private ResponseValidator everythingInvalidator = new ResponseValidator() {
-            @Override
-            public Collection<InvalidationCause> analyse(Response response) {
-                return Arrays.asList(
-                        new InvalidationCause("everything is invalid"),
-                        new InvalidationCause("another cause should be here"),
-                        new InvalidationCause("the third cause")
-                );
-            }
-        };
-
         @Before
         public void setUp() {
             response = new BaseResponse(200, "body");
             mock.responses.add(response);
-            requester = new ResponseValidatingRequester(mock, everythingInvalidator);
+            requester = new ResponseValidatingRequester(mock, new ThreeCausesInvalidatorStub());
         }
 
         public class WhenRunningARequest {
@@ -106,18 +88,11 @@ public class ResponseValidatingRequesterTest {
     }
 
     public class GivenAValidatorThatDictatesEveryResponseIsValid {
-        private ResponseValidator everythingValidator = new ResponseValidator() {
-            @Override
-            public Collection<InvalidationCause> analyse(Response response) {
-                return Arrays.asList();
-            }
-        };
-
         @Before
         public void setUp() {
             response = new BaseResponse(500, "body");
             mock.responses.add(response);
-            requester = new ResponseValidatingRequester(mock, everythingValidator);
+            requester = new ResponseValidatingRequester(mock, new EverythingValidatorStub());
         }
 
         public class WhenRunningARequest {
