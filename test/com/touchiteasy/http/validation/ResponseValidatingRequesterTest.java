@@ -41,18 +41,18 @@ public class ResponseValidatingRequesterTest {
         }
 
         public class WhenRunningARequest {
-            @Test (expected = ResponseValidator.InvalidResponseException.class)
+            @Test (expected = InvalidResponseException.class)
             public void ShouldThrowInvalidResponseException() {
                 requester.run(request);
             }
 
             @Test
             public void TheExceptionsMessageShouldContainTheCauseDescription() {
-                ResponseValidator.InvalidResponseException exception = null;
+                InvalidResponseException exception = null;
 
                 try {
                     requester.run(request);
-                } catch (ResponseValidator.InvalidResponseException e){
+                } catch (InvalidResponseException e){
                     exception = e;
                 }
 
@@ -124,18 +124,18 @@ public class ResponseValidatingRequesterTest {
                 requester = new ResponseValidatingRequester(mock, validator);
             }
 
-            @Test (expected = ResponseValidator.InvalidResponseException.class)
+            @Test (expected = InvalidResponseException.class)
             public void ShouldThrowInvalidResponseException() {
                 requester.run(request);
             }
 
             @Test
             public void TheExceptionsMessageShouldContainTheCauseDescription() {
-                ResponseValidator.InvalidResponseException exception = null;
+                InvalidResponseException exception = null;
 
                 try {
                     requester.run(request);
-                } catch (ResponseValidator.InvalidResponseException e){
+                } catch (InvalidResponseException e){
                     exception = e;
                 }
 

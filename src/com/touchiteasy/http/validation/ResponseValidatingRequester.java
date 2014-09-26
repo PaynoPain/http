@@ -1,5 +1,6 @@
 package com.touchiteasy.http.validation;
 
+import com.touchiteasy.http.IdentifiableResponse;
 import com.touchiteasy.http.Request;
 import com.touchiteasy.http.ResourceRequester;
 import com.touchiteasy.http.Response;
@@ -16,7 +17,15 @@ public class ResponseValidatingRequester implements ResourceRequester {
     @Override
     public Response run(Request request) {
         Response response = baseRequester.run(request);
-        validator.validate(response);
+
+        final ResponseValidator.ValidationResult result = validator.analyse(response);
+        if (!result.isValid)
+            throw new InvalidResponseException(String.format(
+                    "The following response is invalid because %s.\n%s",
+                    result.causeDescription,
+                    new IdentifiableResponse(response).toString()
+            ));
+
         return response;
     }
 }
