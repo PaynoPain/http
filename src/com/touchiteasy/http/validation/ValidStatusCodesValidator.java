@@ -2,9 +2,10 @@ package com.touchiteasy.http.validation;
 
 import com.touchiteasy.http.Response;
 
+import java.util.Arrays;
 import java.util.Collection;
 
-public class ValidStatusCodesValidator extends ResponseValidator {
+public class ValidStatusCodesValidator implements ResponseValidator {
     private final Collection<Integer> validStatusCodes;
 
     public ValidStatusCodesValidator(Collection<Integer> validStatusCodes){
@@ -12,11 +13,12 @@ public class ValidStatusCodesValidator extends ResponseValidator {
     }
 
     @Override
-    protected ValidationResult analyse(Response response) {
+    public Collection<InvalidationCause> analyse(Response response) {
         if (validStatusCodes.contains(response.getStatusCode()))
-            return ValidationResult.valid();
+            return Arrays.asList();
         else
-            return ValidationResult.invalid(
-                    String.format("the only valid status codes are %s", validStatusCodes.toString()));
+            return Arrays.asList(new InvalidationCause(
+                    String.format("the only valid status codes are %s", validStatusCodes.toString())
+            ));
     }
 }

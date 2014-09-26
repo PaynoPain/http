@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
@@ -28,8 +29,8 @@ public class ResponseValidatingRequesterTest {
     public class GivenAValidatorThatDictatesEveryResponseIsInvalid {
         private ResponseValidator everythingInvalidator = new ResponseValidator() {
             @Override
-            protected ValidationResult analyse(Response response) {
-                return ValidationResult.invalid("everything is invalid");
+            public Collection<InvalidationCause> analyse(Response response) {
+                return Arrays.asList(new InvalidationCause("everything is invalid"));
             }
         };
 
@@ -64,8 +65,8 @@ public class ResponseValidatingRequesterTest {
     public class GivenAValidatorThatDictatesEveryResponseIsValid {
         private ResponseValidator everythingValidator = new ResponseValidator() {
             @Override
-            protected ValidationResult analyse(Response response) {
-                return ValidationResult.valid();
+            public Collection<InvalidationCause> analyse(Response response) {
+                return Arrays.asList();
             }
         };
 

@@ -6,12 +6,15 @@ import com.touchiteasy.commons.MutableFactory;
 import com.touchiteasy.http.*;
 import com.touchiteasy.http.actions.RequestComposer;
 import com.touchiteasy.http.actions.ResponseInterpreter;
+import com.touchiteasy.http.validation.InvalidationCause;
 import com.touchiteasy.http.validation.ResponseValidator;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -47,14 +50,14 @@ public class OnDemandCachedQueryTest {
         };
         final ResponseValidator cacheValidator = new ResponseValidator() {
             @Override
-            protected ValidationResult analyse(Response response) {
+            public Collection<InvalidationCause> analyse(Response response) {
                 if (response.getStatusCode() != 200)
-                    return ValidationResult.invalid("The response status code should be 200 (OK).");
+                    return Arrays.asList(new InvalidationCause("The response status code should be 200 (OK)."));
 
                 if (response.getBody().equals("::error::"))
-                    return ValidationResult.invalid("The response body should not contain an error.");
+                    return Arrays.asList(new InvalidationCause("The response body should not contain an error."));
 
-                return ValidationResult.valid();
+                return Arrays.asList();
             }
         };
         query = new OnDemandCachedQuery<String, String>(
