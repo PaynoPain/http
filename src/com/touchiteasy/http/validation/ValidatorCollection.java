@@ -2,6 +2,7 @@ package com.touchiteasy.http.validation;
 
 import com.touchiteasy.http.Response;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,6 +18,11 @@ public class ValidatorCollection implements ResponseValidator {
 
     @Override
     public Collection<InvalidationCause> analyse(Response response) {
-        return validators.iterator().next().analyse(response);
+        final ArrayList<InvalidationCause> causes = new ArrayList<InvalidationCause>();
+
+        for (ResponseValidator validator : validators)
+            causes.addAll(validator.analyse(response));
+
+        return causes;
     }
 }

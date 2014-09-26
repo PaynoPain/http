@@ -32,4 +32,27 @@ public class ValidatorCollectionTest {
 
         assertThat(causesFromCollection, is(causesFromStub));
     }
+
+    @Test
+    public void GivenThreeValidators_ShouldReturnTheirInvalidationCausesTogether() {
+        final ValidatorCollection validatorCollection = new ValidatorCollection(Arrays.<ResponseValidator>asList(
+                new ResponseValidatorStub(Arrays.asList(
+                        new InvalidationCause("::cause_from_validator1::")
+                )),
+                new ResponseValidatorStub(Arrays.<InvalidationCause>asList()),
+                new ResponseValidatorStub(Arrays.asList(
+                        new InvalidationCause("::cause_from_validator3::")
+                ))
+        ));
+
+        final BaseResponse response = new BaseResponse(200, "::body::");
+
+        final Collection<InvalidationCause> actualCauses = validatorCollection.analyse(response);
+        final Collection<InvalidationCause> expectedCauses = Arrays.asList(
+                new InvalidationCause("::cause_from_validator1::"),
+                new InvalidationCause("::cause_from_validator3::")
+        );
+
+        assertThat(actualCauses, is(expectedCauses));
+    }
 }
