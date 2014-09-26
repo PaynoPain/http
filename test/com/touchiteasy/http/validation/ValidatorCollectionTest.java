@@ -17,8 +17,8 @@ public class ValidatorCollectionTest {
 
     @Test
     public void GivenAValidator_ShouldReturnTheSameResultAsIt() {
-        assertSameAnalysisAs(new EverythingInvalidatorStub());
-        assertSameAnalysisAs(new EverythingValidatorStub());
+        assertSameAnalysisAs(new ResponseValidatorStub(Arrays.asList(new InvalidationCause("::cause_of_invalidation::"))));
+        assertSameAnalysisAs(new ResponseValidatorStub(Arrays.<InvalidationCause>asList()));
     }
 
     private void assertSameAnalysisAs(ResponseValidator stub) {

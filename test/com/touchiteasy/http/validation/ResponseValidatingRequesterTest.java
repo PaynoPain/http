@@ -31,7 +31,12 @@ public class ResponseValidatingRequesterTest {
         public void setUp() {
             response = new BaseResponse(200, "body");
             mock.responses.add(response);
-            requester = new ResponseValidatingRequester(mock, new EverythingInvalidatorStub());
+            requester = new ResponseValidatingRequester(
+                    mock,
+                    new ResponseValidatorStub(
+                            Arrays.asList(new InvalidationCause("everything is invalid"))
+                    )
+            );
         }
 
         public class WhenRunningARequest {
@@ -60,7 +65,16 @@ public class ResponseValidatingRequesterTest {
         public void setUp() {
             response = new BaseResponse(200, "body");
             mock.responses.add(response);
-            requester = new ResponseValidatingRequester(mock, new ThreeCausesInvalidatorStub());
+            requester = new ResponseValidatingRequester(
+                    mock,
+                    new ResponseValidatorStub(
+                            Arrays.asList(
+                                    new InvalidationCause("everything is invalid"),
+                                    new InvalidationCause("another cause should be here"),
+                                    new InvalidationCause("the third cause")
+                            )
+                    )
+            );
         }
 
         public class WhenRunningARequest {
@@ -92,7 +106,12 @@ public class ResponseValidatingRequesterTest {
         public void setUp() {
             response = new BaseResponse(500, "body");
             mock.responses.add(response);
-            requester = new ResponseValidatingRequester(mock, new EverythingValidatorStub());
+            requester = new ResponseValidatingRequester(
+                    mock,
+                    new ResponseValidatorStub(
+                            Arrays.<InvalidationCause>asList()
+                    )
+            );
         }
 
         public class WhenRunningARequest {
