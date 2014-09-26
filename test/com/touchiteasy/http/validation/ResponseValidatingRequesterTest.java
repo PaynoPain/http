@@ -62,6 +62,49 @@ public class ResponseValidatingRequesterTest {
         }
     }
 
+    public class GivenAValidatorThatDictatesEveryResponseIsInvalidBecauseOfThreeCauses {
+        private ResponseValidator everythingInvalidator = new ResponseValidator() {
+            @Override
+            public Collection<InvalidationCause> analyse(Response response) {
+                return Arrays.asList(
+                        new InvalidationCause("everything is invalid"),
+                        new InvalidationCause("another cause should be here"),
+                        new InvalidationCause("the third cause")
+                );
+            }
+        };
+
+        @Before
+        public void setUp() {
+            response = new BaseResponse(200, "body");
+            mock.responses.add(response);
+            requester = new ResponseValidatingRequester(mock, everythingInvalidator);
+        }
+
+        public class WhenRunningARequest {
+            @Test (expected = InvalidResponseException.class)
+            public void ShouldThrowInvalidResponseException() {
+                requester.run(request);
+            }
+
+            @Test
+            public void TheExceptionsMessageShouldContainTheCauseDescription() {
+                InvalidResponseException exception = null;
+
+                try {
+                    requester.run(request);
+                } catch (InvalidResponseException e){
+                    exception = e;
+                }
+
+                assertThat(
+                        exception.getMessage(),
+                        containsString("everything is invalid, another cause should be here, the third cause")
+                );
+            }
+        }
+    }
+
     public class GivenAValidatorThatDictatesEveryResponseIsValid {
         private ResponseValidator everythingValidator = new ResponseValidator() {
             @Override
