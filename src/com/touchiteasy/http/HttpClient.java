@@ -1,5 +1,6 @@
 package com.touchiteasy.http;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -46,10 +47,16 @@ class HttpClient {
         try{
             HttpResponse response = createHttpClient(this.timeout).execute(request);
 
-            return new BaseResponse(
-                    response.getStatusLine().getStatusCode(),
-                    getString(response.getEntity().getContent())
-            );
+            final String body;
+            final HttpEntity entity = response.getEntity();
+            if (entity == null)
+                body = "";
+            else
+                body = getString(entity.getContent());
+
+            final int statusCode = response.getStatusLine().getStatusCode();
+
+            return new BaseResponse(statusCode, body);
         } catch (Exception e){
             throw new HttpException(e);
         }
