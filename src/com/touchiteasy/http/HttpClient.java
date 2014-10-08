@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -84,6 +85,7 @@ class HttpClient {
         UrlEncodedFormEntity entity;
         try {
             entity = new UrlEncodedFormEntity(parameters);
+            entity.setContentType(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
         } catch (UnsupportedEncodingException e) {
             throw new HttpException(e);
         }
