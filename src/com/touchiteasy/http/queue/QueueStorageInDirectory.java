@@ -22,40 +22,51 @@ public class QueueStorageInDirectory<T> implements QueueStorage<T> {
     }
 
     @Override
-    public void add(T element) {
+    public synchronized void add(T element) {
+        BufferedWriter fileWriter = null;
         try {
-            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(getNextFile()));
-
+            fileWriter = new BufferedWriter(new FileWriter(getNextFile()));
             fileWriter.write(composer.apply(element));
-
             fileWriter.flush();
-            fileWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException ignored) {}
+            }
         }
     }
 
     @Override
-    public T peek() {
+    public synchronized T peek() {
         String fileContent = readFileContent(getFirstFile());
         return parser.apply(fileContent);
     }
 
     private String readFileContent(File file) {
+        StringBuilder sb = new StringBuilder((int) file.length());
+        FileReader reader = null;
         try {
-            FileReader reader = new FileReader(file);
-            StringBuilder sb = new StringBuilder((int) file.length());
+            reader = new FileReader(file);
             while (reader.ready()){
                 sb.append((char) reader.read());
             }
-            return sb.toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ignored) {}
+            }
         }
+        return sb.toString();
     }
 
     @Override
-    public void dequeue() {
+    public synchronized void dequeue() {
         getFirstFile().delete();
     }
 
