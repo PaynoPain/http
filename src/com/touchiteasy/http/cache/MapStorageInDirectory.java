@@ -15,7 +15,7 @@ public class MapStorageInDirectory implements MapStorage<Request, CacheEntry> {
     }
 
     @Override
-    public boolean contains(Request req) {
+    public synchronized boolean contains(Request req) {
         final File file = getFile(req);
 
         if (!isValid(file)){
@@ -35,7 +35,7 @@ public class MapStorageInDirectory implements MapStorage<Request, CacheEntry> {
     }
 
     @Override
-    public CacheEntry read(Request req) {
+    public synchronized CacheEntry read(Request req) {
         if (!contains(req))
             throw new IllegalStateException("There is no cached entry for the resource: " + req.getResource());
 
@@ -82,7 +82,7 @@ public class MapStorageInDirectory implements MapStorage<Request, CacheEntry> {
     }
 
     @Override
-    public void write(Request req, CacheEntry entry) {
+    public synchronized void write(Request req, CacheEntry entry) {
         final File file = getFile(req);
         BufferedWriter fileWriter = null;
         try {

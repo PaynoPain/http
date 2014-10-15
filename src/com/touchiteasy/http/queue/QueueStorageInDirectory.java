@@ -17,7 +17,7 @@ public class QueueStorageInDirectory<T> implements QueueStorage<T> {
     }
 
     @Override
-    public boolean isEmpty() {
+    public synchronized boolean isEmpty() {
         return getSmallerName() == null;
     }
 
