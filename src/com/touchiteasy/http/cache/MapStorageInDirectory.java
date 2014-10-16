@@ -86,6 +86,11 @@ public class MapStorageInDirectory implements MapStorage<Request, CacheEntry> {
         final File file = getFile(req);
         BufferedWriter fileWriter = null;
         try {
+            final File parentFile = file.getParentFile();
+            if (!parentFile.exists()) {
+                parentFile.mkdirs();
+            }
+
             fileWriter = new BufferedWriter(new FileWriter(file));
 
             String expiration = String.valueOf(entry.expiration.getTime());

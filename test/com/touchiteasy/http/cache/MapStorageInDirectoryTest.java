@@ -28,6 +28,13 @@ public class MapStorageInDirectoryTest extends CacheStorageContract {
         assertThat(testFolder.getRoot().list().length, is(0));
     }
 
+    @Test
+    public void GivenANonExistentParentFolder_ShouldCreateIt() {
+        storage = new MapStorageInDirectory(new File(testFolder.getRoot(), "NonExistentParentFolder"));
+        storage.write(request, entry);
+        assertThat(storage.contains(request), is(true));
+    }
+
     private void createCorruptedFile(Request request, CacheEntry entry) throws IOException {
         storage.write(request, entry);
 
