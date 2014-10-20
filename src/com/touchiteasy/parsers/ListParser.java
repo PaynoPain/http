@@ -6,15 +6,15 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListParser<I, O> implements Function<Iterable<I>, List<O>> {
-    private final Function<I, O> elementParser;
+public class ListParser<Input, Output> implements Function<Iterable<Input>, List<Output>> {
+    private final Function<Input, Output> elementParser;
 
-    public ListParser(Function<I, O> elementParser) {
+    public ListParser(Function<Input, Output> elementParser) {
         this.elementParser = elementParser;
     }
 
     @Override
-    public List<O> apply(Iterable<I> input) throws IllegalArgumentException {
+    public List<Output> apply(Iterable<Input> input) throws IllegalArgumentException {
         try {
             return parseArray(input);
         } catch (JSONException e){
@@ -22,11 +22,11 @@ public class ListParser<I, O> implements Function<Iterable<I>, List<O>> {
         }
     }
 
-    private List<O> parseArray(Iterable<I> input) throws JSONException {
-        ArrayList<O> parsedList = new ArrayList<O>();
+    private List<Output> parseArray(Iterable<Input> input) throws JSONException {
+        ArrayList<Output> parsedList = new ArrayList<Output>();
 
-        for (I i : input){
-            final O parsedElement = this.elementParser.apply(i);
+        for (Input i : input){
+            final Output parsedElement = this.elementParser.apply(i);
             parsedList.add(parsedElement);
         }
 
