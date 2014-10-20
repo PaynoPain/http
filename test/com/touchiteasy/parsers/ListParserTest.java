@@ -38,7 +38,7 @@ public class ListParserTest {
             spy = new ElementParserSpy();
             parser = new ListParser<String, String>(spy);
 
-            parsedResult = parser.apply(new IterableJSONArray<String>(new JSONArray("[\"Common\",\"Staff\",\"VIP\"]")));
+            parsedResult = parser.apply(new JSONList<String>(new JSONArray("[\"Common\",\"Staff\",\"VIP\"]")));
         }
 
         public class ShouldAskTheElementParser {
@@ -84,7 +84,7 @@ public class ListParserTest {
                 }
         );
 
-        final Iterable<JSONObject> input = new IterableJSONArray<JSONObject>(new JSONArray("[{\"num\":1},{\"num\":2}]"));
+        final Iterable<JSONObject> input = new JSONList<JSONObject>(new JSONArray("[{\"num\":1},{\"num\":2}]"));
 
         assertThat(listParser.apply(input), is(Arrays.asList(1, 2)));
     }
@@ -92,7 +92,7 @@ public class ListParserTest {
     @Test
     public void ParsingListIntegers() throws JSONException {
         final ListParser<Integer, Integer> listParser = new ListParser<Integer, Integer>(new Identity<Integer>());
-        final List<Integer> parsed = listParser.apply(new IterableJSONArray<Integer>(new JSONArray("[1,2]")));
+        final List<Integer> parsed = listParser.apply(new JSONList<Integer>(new JSONArray("[1,2]")));
 
         assertThat(parsed, is(Arrays.asList(1, 2)));
     }
