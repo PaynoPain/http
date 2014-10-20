@@ -2,6 +2,8 @@ package com.touchiteasy.parsers;
 
 import com.touchiteasy.commons.Function;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +14,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(HierarchicalContextRunner.class)
-public class JsonObjectUnwrapperTest {
+public class JSONObjectUnwrapperTest {
     class UnwrappedParserSpy implements Function<String, String> {
         public ArrayList<String> inputsReceived = new ArrayList<String>();
 
@@ -24,20 +26,20 @@ public class JsonObjectUnwrapperTest {
     }
 
     UnwrappedParserSpy unwrappedParser;
-    JsonObjectUnwrapper<String> parser;
+    JSONObjectUnwrapper<String, String> parser;
 
     @Before
     public void setUp() {
         unwrappedParser = new UnwrappedParserSpy();
-        parser = new JsonObjectUnwrapper<String>("key", unwrappedParser);
+        parser = new JSONObjectUnwrapper<String, String>("key", unwrappedParser);
     }
 
     public class GivenAValidJson {
         String parsedResult;
 
         @Before
-        public void setUp(){
-            parsedResult = parser.apply("{key: \"::content::\"}");
+        public void setUp() throws JSONException {
+            parsedResult = parser.apply(new JSONObject("{key: \"::content::\"}"));
         }
 
         @Test
@@ -54,23 +56,21 @@ public class JsonObjectUnwrapperTest {
 
     public class ShouldThrowException {
         @Test(expected = IllegalArgumentException.class)
-        public void withAnObjectWithoutTheKey() {
-            parser.apply("{}");
+        public void withAnObjectWithoutTheKey() throws JSONException {
+            parser.apply(new JSONObject("{}"));
         }
+    }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void withAString() {
-            parser.apply("foo");
-        }
+    @Test
+    public void integrateWithAnotherParser() throws JSONException {
+        final Function<String, Integer> parseInt = new Function<String, Integer>() {
+            @Override
+            public Integer apply(String num) throws RuntimeException {
+                return Integer.parseInt(num);
+            }
+        };
+        final JSONObjectUnwrapper<String, Integer> parser = new JSONObjectUnwrapper<String, Integer>("key", parseInt);
 
-        @Test(expected = IllegalArgumentException.class)
-        public void withANumber() {
-            parser.apply("5");
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void withAnArray() {
-            parser.apply("[5]");
-        }
+        assertThat(parser.apply(new JSONObject("{\"key\":\"123\"}")), is(123));
     }
 }
