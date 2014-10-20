@@ -2,6 +2,9 @@ package com.touchiteasy.parsers;
 
 import com.touchiteasy.commons.Function;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +17,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(HierarchicalContextRunner.class)
-public class JsonListParserTest {
+public class ListParserTest {
     class ElementParserSpy implements Function<String, String> {
         public ArrayList<String> inputsReceived = new ArrayList<String>();
 
@@ -25,21 +28,17 @@ public class JsonListParserTest {
         }
     }
 
-    ElementParserSpy spy;
-    JsonListParser<String> parser;
-
-    @Before
-    public void setUp() {
-        spy = new ElementParserSpy();
-        parser = new JsonListParser<String>(spy);
-    }
-
     public class GivenAValidJson {
+        ElementParserSpy spy;
+        ListParser<String, String> parser;
         List<String> parsedResult;
 
         @Before
-        public void setUp(){
-            parsedResult = parser.apply("[\"Common\",\"Staff\",\"VIP\"]");
+        public void setUp() throws JSONException {
+            spy = new ElementParserSpy();
+            parser = new ListParser<String, String>(spy);
+
+            parsedResult = parser.apply(new IterableJSONArray<String>(new JSONArray("[\"Common\",\"Staff\",\"VIP\"]")));
         }
 
         public class ShouldAskTheElementParser {
@@ -70,20 +69,31 @@ public class JsonListParserTest {
         }
     }
 
-    public class ShouldThrowException {
-        @Test(expected = IllegalArgumentException.class)
-        public void withAnObject() {
-            parser.apply("{}");
-        }
+    @Test
+    public void ParsingListOfJSONObjectsContent() throws JSONException {
+        final ListParser<JSONObject, Integer> listParser = new ListParser<JSONObject, Integer>(
+                new Function<JSONObject, Integer>() {
+                    @Override
+                    public Integer apply(JSONObject object) throws RuntimeException {
+                        try {
+                            return object.getInt("num");
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+        );
 
-        @Test(expected = IllegalArgumentException.class)
-        public void withAString() {
-            parser.apply("foo");
-        }
+        final Iterable<JSONObject> input = new IterableJSONArray<JSONObject>(new JSONArray("[{\"num\":1},{\"num\":2}]"));
 
-        @Test(expected = IllegalArgumentException.class)
-        public void withANumber() {
-            parser.apply("5");
-        }
+        assertThat(listParser.apply(input), is(Arrays.asList(1, 2)));
+    }
+
+    @Test
+    public void ParsingListIntegers() throws JSONException {
+        final ListParser<Integer, Integer> listParser = new ListParser<Integer, Integer>(new Identity<Integer>());
+        final List<Integer> parsed = listParser.apply(new IterableJSONArray<Integer>(new JSONArray("[1,2]")));
+
+        assertThat(parsed, is(Arrays.asList(1, 2)));
     }
 }
