@@ -69,8 +69,10 @@ public class OnDemandCacheRequester implements ResourceRequester {
     }
 
     public void expire(Request req) {
-        final CacheEntry entry = cache.read(req);
-        Date before = new Date(now().getTime() -1);
-        cache.write(req, new CacheEntry(entry.response, before, entry.deadline));
+        if (cache.contains(req)){
+            final CacheEntry entry = cache.read(req);
+            Date before = new Date(now().getTime() -1);
+            cache.write(req, new CacheEntry(entry.response, before, entry.deadline));
+        }
     }
 }

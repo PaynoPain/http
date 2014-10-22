@@ -314,5 +314,10 @@ public class OnDemandCacheRequesterTest {
                 assertThat(response.getBody(), is(secondResponse.getBody()));
             }
         }
+
+        @Test
+        public void ExpiringARequestNotCached_ShouldNotThrowException() {
+            cache.expire(new BaseRequest("notCached"));
+        }
     }
 }
