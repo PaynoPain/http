@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.sameInstance;
 public class OnDemandCacheRequesterTest {
     MutableFactory<Date> timeGateway;
     ServerMock server;
-    ResourceRequester cache;
+    OnDemandCacheRequester cache;
     Long cacheDuration, timeToRefresh;
 
     @Before
@@ -289,6 +289,29 @@ public class OnDemandCacheRequesterTest {
             @Test
             public void ShouldReturnTheResponseFromTheServer() {
                 assertThat(actualResponse, is(sameInstance(mockResponse)));
+            }
+        }
+
+        public class AndThenExpireTheRequest {
+            BaseResponse secondResponse;
+
+            @Before
+            public void ChangeTime(){
+                timeGateway.set(new Date(firstRequestTime + 1));
+
+                secondResponse = new BaseResponse(200, "secondResponse");
+                server.addResponse(secondResponse);
+
+                cache.expire(firstRequest);
+            }
+
+            @Test
+            public void ShouldAskTheServerAgain(){
+                final Response response = cache.run(firstRequest);
+
+                assertThat(server.requests.size(), is(2));
+                assertThat(response.getStatusCode(), is(secondResponse.getStatusCode()));
+                assertThat(response.getBody(), is(secondResponse.getBody()));
             }
         }
     }

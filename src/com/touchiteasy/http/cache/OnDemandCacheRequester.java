@@ -27,14 +27,14 @@ public class OnDemandCacheRequester implements ResourceRequester {
     @Override
     public Response run(Request req) {
         if (!cache.contains(req)){
-            cache.write(req, runRequest(req));
+            cache.write(req, createEntry(requester.run(req)));
         }
 
         if (isOutdated(cache.read(req))){
             CacheEntry entry = null;
 
             try {
-                entry = runRequest(req);
+                entry = createEntry(requester.run(req));
             } catch (RuntimeException e){
                 if (isDeadline(cache.read(req))){
                     throw e;
@@ -48,9 +48,7 @@ public class OnDemandCacheRequester implements ResourceRequester {
         return cache.read(req).response;
     }
 
-    private CacheEntry runRequest(Request req) {
-        Response response = requester.run(req);
-
+    private CacheEntry createEntry(Response response) {
         long now = now().getTime();
         long expiration = now + cacheDurationInMilliseconds;
         long deadline = expiration + timeToRefreshInMilliseconds;
@@ -68,5 +66,11 @@ public class OnDemandCacheRequester implements ResourceRequester {
 
     private Date now() {
         return timeGateway.get();
+    }
+
+    public void expire(Request req) {
+        final CacheEntry entry = cache.read(req);
+        Date before = new Date(now().getTime() -1);
+        cache.write(req, new CacheEntry(entry.response, before, entry.deadline));
     }
 }
