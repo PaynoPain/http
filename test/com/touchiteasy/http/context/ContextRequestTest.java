@@ -1,6 +1,6 @@
 package com.touchiteasy.http.context;
 
-import com.touchiteasy.commons.LiteralStringsMap;
+import com.touchiteasy.commons.LiteralHashMap;
 import com.touchiteasy.http.BaseRequest;
 import com.touchiteasy.http.Request;
 import org.junit.Before;
@@ -20,7 +20,7 @@ public class ContextRequestTest {
     public void setUp(){
         base = new BaseRequest(
                 "::base_resource::",
-                new LiteralStringsMap(
+                new LiteralHashMap<String, String>(
                         "::base_key::", "::base_value::"
                 )
         );

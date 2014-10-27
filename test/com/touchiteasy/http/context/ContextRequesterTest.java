@@ -1,6 +1,6 @@
 package com.touchiteasy.http.context;
 
-import com.touchiteasy.commons.LiteralStringsMap;
+import com.touchiteasy.commons.LiteralHashMap;
 import com.touchiteasy.http.BaseRequest;
 import com.touchiteasy.http.BaseResponse;
 import com.touchiteasy.http.RequesterMock;
@@ -24,7 +24,7 @@ public class ContextRequesterTest {
 
         @Before
         public void setUp(){
-            baseRequest = new BaseRequest("url", new LiteralStringsMap("username", "user", "password", "pass"));
+            baseRequest = new BaseRequest("url", new LiteralHashMap<String, String>("username", "user", "password", "pass"));
             baseRequester = new RequesterMock();
             baseRequester.responses.add(new BaseResponse(200, ""));
         }
@@ -38,7 +38,7 @@ public class ContextRequesterTest {
 
             @Test
             public void shouldContainOnlyThe2InitialParameters(){
-                Map<String, String> expected = new LiteralStringsMap("username", "user", "password", "pass");
+                Map<String, String> expected = new LiteralHashMap<String, String>("username", "user", "password", "pass");
                 assertThat(baseRequester.requests.get(0).getParameters(), is(expected));
             }
         }
@@ -46,13 +46,13 @@ public class ContextRequesterTest {
         public class WhenAdding2MoreParameters{
             @Before
             public void setUp(){
-                contextRequester = new ContextRequester(baseRequester, new AdditionalParametersContext(new LiteralStringsMap("clientId", "client", "clientSecret", "secret")));
+                contextRequester = new ContextRequester(baseRequester, new AdditionalParametersContext(new LiteralHashMap<String, String>("clientId", "client", "clientSecret", "secret")));
                 contextRequester.run(baseRequest);
             }
 
             @Test
             public void shouldContainThe4Parameters(){
-                Map<String, String> expected = new LiteralStringsMap("username", "user", "password", "pass","clientId", "client", "clientSecret", "secret");
+                Map<String, String> expected = new LiteralHashMap<String, String>("username", "user", "password", "pass","clientId", "client", "clientSecret", "secret");
                 assertThat(baseRequester.requests.get(0).getParameters(), is(expected));
             }
 

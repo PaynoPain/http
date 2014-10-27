@@ -1,6 +1,6 @@
 package com.touchiteasy.http.context;
 
-import com.touchiteasy.commons.LiteralStringsMap;
+import com.touchiteasy.commons.LiteralHashMap;
 import com.touchiteasy.http.BaseRequest;
 import com.touchiteasy.http.Request;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
@@ -20,7 +20,7 @@ public class AdditionalParametersContextTest {
         BaseRequest mock;
         @Before
         public void setUp(){
-            mock = new BaseRequest("url", new LiteralStringsMap("username", "user", "password", "pass"));
+            mock = new BaseRequest("url", new LiteralHashMap<String, String>("username", "user", "password", "pass"));
         }
         public class WhenAddingNoParametersToTheContext{
             Request paramsMerger;
@@ -30,7 +30,7 @@ public class AdditionalParametersContextTest {
             }
             @Test
             public void shouldContainOnlyThe2InitialParameters(){
-                Map<String, String> expected = new LiteralStringsMap("username", "user", "password", "pass");
+                Map<String, String> expected = new LiteralHashMap<String, String>("username", "user", "password", "pass");
                 assertThat(paramsMerger.getParameters(), is(expected));
             }
         }
@@ -38,11 +38,11 @@ public class AdditionalParametersContextTest {
             Request paramsMerger;
             @Before
             public void setUp(){
-                paramsMerger = new ContextRequest(mock, new AdditionalParametersContext(new LiteralStringsMap("clientId", "client", "clientSecret", "secret")));
+                paramsMerger = new ContextRequest(mock, new AdditionalParametersContext(new LiteralHashMap<String, String>("clientId", "client", "clientSecret", "secret")));
             }
             @Test
             public void shouldContainThe4Parameters(){
-                Map<String, String> expected = new LiteralStringsMap("username", "user", "password", "pass","clientId", "client", "clientSecret", "secret");
+                Map<String, String> expected = new LiteralHashMap<String, String>("username", "user", "password", "pass","clientId", "client", "clientSecret", "secret");
                 assertThat(paramsMerger.getParameters(), is(expected));
             }
             @Test

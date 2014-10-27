@@ -1,6 +1,6 @@
 package com.touchiteasy.parsers;
 
-import com.touchiteasy.commons.LiteralStringsMap;
+import com.touchiteasy.commons.LiteralHashMap;
 import com.touchiteasy.http.BaseRequest;
 import com.touchiteasy.http.IdentifiableRequest;
 import com.touchiteasy.http.Request;
@@ -23,7 +23,7 @@ public class JsonRequestComposerTest {
     public void GivenARequest_ShouldComposeItCorrectly() {
         final Request initial = new IdentifiableRequest(new BaseRequest(
                 "::resource::",
-                new LiteralStringsMap(
+                new LiteralHashMap<String, String>(
                         "::key1::", "::value1::",
                         "::key2::", "::value2::"
                 )
@@ -47,7 +47,7 @@ public class JsonRequestComposerTest {
 
         final Request initial = new IdentifiableRequest(new BaseRequest(
                 "::resource::",
-                new LiteralStringsMap(
+                new LiteralHashMap<String, String>(
                         "::json_value::", jsonValue.toString()
                 )
         ));
