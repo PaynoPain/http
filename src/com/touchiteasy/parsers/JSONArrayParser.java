@@ -6,10 +6,10 @@ import org.json.JSONArray;
 import java.util.List;
 
 public class JSONArrayParser<InputElement, OutputElement> implements Function<JSONArray, List<OutputElement>> {
-    private final ListParser<InputElement, OutputElement> listParser;
+    private final LazyListParser<InputElement, OutputElement> listParser;
 
     public JSONArrayParser(Function<InputElement, OutputElement> elementParser) {
-        listParser = new ListParser<InputElement, OutputElement>(elementParser);
+        listParser = new LazyListParser<InputElement, OutputElement>(elementParser);
     }
 
     @Override
