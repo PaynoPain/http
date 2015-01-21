@@ -1,6 +1,7 @@
 package com.paynopain.parsers;
 
 import com.paynopain.commons.Function;
+import com.paynopain.commons.Identity;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
 import org.json.JSONArray;
 import org.json.JSONException;

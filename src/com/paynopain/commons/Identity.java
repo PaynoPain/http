@@ -1,6 +1,4 @@
-package com.paynopain.parsers;
-
-import com.paynopain.commons.Function;
+package com.paynopain.commons;
 
 public class Identity<T> implements Function<T, T> {
     @Override
