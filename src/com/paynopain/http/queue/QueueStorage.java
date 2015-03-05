@@ -5,4 +5,5 @@ public interface QueueStorage<T> {
     public void add(T t);
     public T peek();
     public void dequeue();
+    public int size();
 }

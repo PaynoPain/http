@@ -24,6 +24,18 @@ public abstract class QueueStorageContract {
         assertThat(storage.isEmpty(), is(true));
     }
 
+    @Test
+    public void WithoutElements_SizeShouldBe0(){
+        assertThat(storage.size(),is(0));
+    }
+
+    @Test
+    public void WithTwoElements_SizeShouldBe1(){
+        storage.add("::element1::");
+        storage.add("::element2::");
+        assertThat(storage.size(),is(2));
+    }
+
     @Test(expected = NoSuchElementException.class)
     public void WithNoData_WhenRemoving_ShouldTrowException(){
         storage.dequeue();

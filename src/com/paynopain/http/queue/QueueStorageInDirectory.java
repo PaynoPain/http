@@ -70,6 +70,11 @@ public class QueueStorageInDirectory<T> implements QueueStorage<T> {
         getFirstFile().delete();
     }
 
+    @Override
+    public int size() {
+        return this.rootDirectory.listFiles().length;
+    }
+
     private File getNextFile() {
         Integer biggerName = getBiggerName();
         Integer fileNumber = biggerName == null? 0 : biggerName +1;

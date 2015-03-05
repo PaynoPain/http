@@ -25,4 +25,9 @@ public class QueueStorageInMemory<T> implements QueueStorage<T> {
     public void dequeue() {
         elements.remove();
     }
+
+    @Override
+    public int size() {
+        return elements.size();
+    }
 }
