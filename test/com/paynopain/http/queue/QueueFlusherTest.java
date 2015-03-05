@@ -89,7 +89,7 @@ public class QueueFlusherTest {
     }
 
     @Test
-    public void GivenAQueueWithThreeRequests_WhenOneOfThemThrowsException_ShouldStopSendingThem() {
+    public void GivenAQueueWithThreeRequests_WhenOneOfThemThrowsException_ShouldContinueSending() {
         final BaseResponse ok = new BaseResponse(200, "ok");
         serverRequester.addResponse(ok);
         serverRequester.addResponseFactory(new Factory<Response>() {
@@ -106,8 +106,8 @@ public class QueueFlusherTest {
 
         queueFlusher.flush();
 
-        assertThat(serverRequester.requests.size(), is(2));
-        assertThat(serverRequester.requests.get(1).getResource(), is("::request2::"));
+        assertThat(serverRequester.requests.size(), is(3));
+        assertThat(serverRequester.requests.get(2).getResource(), is("::request3::"));
     }
 
     private static class FailingPeekStorage implements QueueStorage<Request>{
@@ -128,6 +128,11 @@ public class QueueFlusherTest {
 
         @Override
         public void dequeue() {}
+
+        @Override
+        public int size() {
+            return 1;
+        }
     }
 
     @Test(expected = FailingPeekStorage.StorageFailure.class)
@@ -155,6 +160,11 @@ public class QueueFlusherTest {
         @Override
         public void dequeue() {
             throw new StorageFailure();
+        }
+
+        @Override
+        public int size() {
+            return 1;
         }
     }
 
